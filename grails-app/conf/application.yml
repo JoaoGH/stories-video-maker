@@ -4,7 +4,7 @@ server.servlet.context-path: '/${info.app.name}'
 grails:
     profile: rest-api
     codegen:
-        defaultPackage: stories.video.maker
+        defaultPackage: br.com.dark.svm
     gorm:
         reactor:
             # Whether to translate GORM events into Reactor events

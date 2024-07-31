@@ -1,4 +1,4 @@
-package stories.video.maker
+package br.com.dark.svm
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
