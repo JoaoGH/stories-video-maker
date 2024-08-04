@@ -9,7 +9,7 @@ class RedditController {
 
     RedditService redditService
 
-	static responseFormats = ['json', 'xml']
+	static responseFormats = ['json']
 	
     def index() {
         Map retorno = redditService.getAmITheAsshole()
