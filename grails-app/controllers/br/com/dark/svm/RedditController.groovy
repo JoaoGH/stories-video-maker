@@ -12,7 +12,11 @@ class RedditController {
 	static responseFormats = ['json']
 	
     def index() {
+        respond([:], status: HttpStatus.OK)
+    }
+
+    def save() {
         Map retorno = redditService.getAmITheAsshole()
-        respond(retorno, status: HttpStatus.OK)
+        respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
     }
 }
