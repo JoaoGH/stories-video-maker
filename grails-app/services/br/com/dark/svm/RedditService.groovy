@@ -17,7 +17,7 @@ class RedditService implements ServletAttributes {
         Map retorno = [:]
 
         Request request = new Request.Builder()
-                .setUrl("https://www.reddit.com/r/EuSouOBabaca.json")
+                .setUrl(ApplicationConfig.getRedditAITMUrl())
                 .build()
 
         ResponseContent responseContent = request.execute()
