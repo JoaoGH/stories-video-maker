@@ -1,11 +1,10 @@
 package br.com.dark.svm
 
-
-import grails.rest.*
-import grails.converters.*
+import br.com.dark.svm.exception.ControllerExceptionHandler
+import br.com.dark.svm.helper.JsonHelper
 import org.springframework.http.HttpStatus
 
-class RedditController {
+class RedditController implements ControllerExceptionHandler {
 
     RedditService redditService
 
