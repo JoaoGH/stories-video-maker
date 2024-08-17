@@ -1,5 +1,7 @@
 package br.com.dark.svm.tts
 
+import br.com.dark.svm.helper.TextHelper
+
 enum SpeechBreakMode {
 
     BREAK_ON_PUNCTUATION(){
@@ -60,11 +62,7 @@ enum SpeechBreakMode {
     }
 
     static String[] getWords(String speech) {
-        return speech
-                .replaceAll("\\+", "plus")
-                .replaceAll(" ", "+")
-                .replaceAll("&", "and")
-                .split("\\+");
+        return TextHelper.getWords(speech)
     }
 
     static boolean hasPunctuation(String word) {
