@@ -25,5 +25,6 @@ class Historia {
 
     static constraints = {
         status maxSize: 1
+        dataHoraCriacao nullable: true
     }
 }
