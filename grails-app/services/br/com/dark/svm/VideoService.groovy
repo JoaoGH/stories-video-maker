@@ -8,6 +8,8 @@ import java.nio.file.Path
 @Transactional
 class VideoService {
 
+    HistoriaService historiaService
+
     void createVideo(String videoName) {
         String videoBase = ApplicationConfig.getVideoBasePath() + "/" + videoName
 
