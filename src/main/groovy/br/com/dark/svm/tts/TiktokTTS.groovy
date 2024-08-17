@@ -15,10 +15,10 @@ class TiktokTTS {
 
     TiktokTTS(String sessionId, Voice voice, String speech, File output, SpeechBreakMode mode) {
         this.voice = voice;
-        setSpeech(speech);
         this.output = output;
         this.sessionId = sessionId;
         this.breakMode = mode;
+        setSpeech(speech);
     }
 
     TiktokTTS(String sessionId, Voice voice, String speech, File output) {
