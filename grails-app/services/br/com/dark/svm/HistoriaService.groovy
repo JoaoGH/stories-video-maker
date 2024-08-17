@@ -16,9 +16,8 @@ class HistoriaService {
         record.setConteudo(TextHelper.removerEmoji(data.selftext.toString()))
         record.setOrigem(origem.getValue())
         record.setIdioma(new Locale("pt", "BR"))
-        record.setStatus(HistoriaStatusEnum.CRIADA.getValue())
+        record.setStatus(HistoriaStatusEnum.OBTIDA.getValue())
         record.setDataHoraBusca(LocalDateTime.now())
-        record.setDataHoraCriacao(DateHelper.getLocalDateTimeByEpochSeconds(data.created_utc.toLong()))
 
         record.save(flush: true, failOnError: true)
 
