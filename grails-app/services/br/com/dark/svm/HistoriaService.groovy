@@ -2,7 +2,6 @@ package br.com.dark.svm
 
 import br.com.dark.svm.enums.HistoriaOrigemEnum
 import br.com.dark.svm.enums.HistoriaStatusEnum
-import br.com.dark.svm.helper.DateHelper
 import br.com.dark.svm.helper.TextHelper
 import grails.gorm.transactions.Transactional
 import java.time.LocalDateTime
