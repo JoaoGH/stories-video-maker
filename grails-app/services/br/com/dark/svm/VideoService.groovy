@@ -15,6 +15,7 @@ class VideoService {
             throw new Exception("Sem arquivo de video para uso.")
         }
 
+        Historia historia = historiaService.getNextHistoria()
     }
 
 }

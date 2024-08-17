@@ -4,6 +4,7 @@ import br.com.dark.svm.enums.HistoriaOrigemEnum
 import br.com.dark.svm.enums.HistoriaStatusEnum
 import br.com.dark.svm.helper.TextHelper
 import grails.gorm.transactions.Transactional
+import javassist.NotFoundException
 import java.time.LocalDateTime
 
 @Transactional
@@ -21,6 +22,18 @@ class HistoriaService {
         record.save(flush: true, failOnError: true)
 
         return record
+    }
+
+    Historia getNextHistoria() {
+        List<Historia> historias = Historia.createCriteria().list {
+            eq('status', HistoriaStatusEnum.OBTIDA.getValue())
+        }
+
+        if (historias.isEmpty()) {
+            throw new NotFoundException("Sem historias salvas no banco.")
+        }
+
+        return historias.get(0)
     }
 
 }
