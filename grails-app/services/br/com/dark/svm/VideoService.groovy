@@ -66,6 +66,8 @@ class VideoService implements ServletAttributes {
             throw new Exception("Sem arquivo de video para uso.")
         }
 
+        Integer tamanhoTotalVideo = getTamanhoTotalVideo(videoBase)
+
         Historia historia = historiaService.getNextHistoria()
 
         File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
@@ -81,6 +83,23 @@ class VideoService implements ServletAttributes {
         concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
         Integer tamanhoFinal = tamanhoHistoria(historia.id)
 
+    }
+
+    Integer getTamanhoTotalVideo(String video) {
+        String command = "ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 ${video}"
+        String retornoComando = runCommand(command)
+
+        if (!retornoComando) {
+            throw new Exception("Não foi possível identificar o tamanho do vídeo original.")
+        }
+
+        Integer retorno = Math.ceil(retornoComando as BigDecimal)?.toInteger()
+
+        if (!retorno) {
+            throw new Exception("Não foi possível identificar o tamanho do vídeo original.")
+        }
+
+        return retorno
     }
 
     void concatAudios(String titulo, String conteudo, Long id) {
