@@ -4,6 +4,10 @@ import br.com.dark.svm.tts.TiktokTTS
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
 import grails.web.api.ServletAttributes
+import javazoom.jl.decoder.Bitstream
+import javazoom.jl.decoder.Header
+import javazoom.jl.decoder.JavaLayerException
+
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -33,6 +37,7 @@ class VideoService implements ServletAttributes {
         ttsConteudo.createAudioFile()
 
         concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
+        Integer tamanhoFinal = tamanhoHistoria(historia.id)
 
     }
 
@@ -49,6 +54,29 @@ class VideoService implements ServletAttributes {
         }
 
         outputStream.close()
+    }
+
+    Integer tamanhoHistoria(Long id) {
+        String finalAudio = ApplicationConfig.getVideoBasePath() + "/historia_${id}/audio_final.mp3"
+
+        BigDecimal durationInSeconds = BigDecimal.ZERO
+        def fileInputStream = new FileInputStream(finalAudio)
+        def bitstream = new Bitstream(fileInputStream)
+        Header header
+
+        try {
+            while ((header = bitstream.readFrame()) != null) {
+                durationInSeconds += header.ms_per_frame() / 1000.0
+                bitstream.closeFrame()
+            }
+        } catch (JavaLayerException e) {
+            e.printStackTrace()
+            throw new Exception("Erro ao calcular o tamanho final da história.")
+        } finally {
+            fileInputStream.close()
+        }
+
+        return durationInSeconds.toInteger()
     }
 
     String getSessionId() {
