@@ -87,6 +87,9 @@ class VideoService implements ServletAttributes {
         cut(videoBase, videoOut, 0, tamanhoFinal)
 
         removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoTotalVideo)
+
+        List<String> videosSegmentados = segmentVideo(videoOut, tamanhoFinal, historia.id)
+
     }
 
     Integer getTamanhoTotalVideo(String video) {
@@ -155,6 +158,57 @@ class VideoService implements ServletAttributes {
         }
 
         return durationInSeconds.toInteger()
+    }
+
+    /**
+     * Cria uma lista com o tempo
+     *
+     * */
+    List<Integer> getSegmentVideoSize(Integer tempoTotal) {
+        List<Integer> segments = []
+        Integer tempoMaximo = 57
+
+        if (tempoTotal <= tempoMaximo) {
+            return [tempoTotal]
+        }
+
+        // Calcula o número ideal de segmentos necessários para obter segmentos semelhantes
+        Integer totalSegmentosVideo = (Integer) Math.ceil((double) tempoTotal / tempoMaximo)
+
+        // Calcula o tempo base de cada segmento
+        Integer tempoBaseSegmento = (Integer) (tempoTotal / totalSegmentosVideo)
+
+        // Calcula o tempo restante a ser distribuído
+        Integer tempoRestante = tempoTotal % totalSegmentosVideo
+
+        // Cria os segmentos, distribuindo o tempo restante uniformemente
+        for (int i = 0; i < totalSegmentosVideo; i++) {
+            Integer duracaoSegmento = tempoBaseSegmento
+            if (tempoRestante > 0) {
+                duracaoSegmento += 1
+                tempoRestante--
+            }
+            segments.add(duracaoSegmento)
+        }
+
+        return segments
+    }
+
+    List<String> segmentVideo(String video, Integer tempoVideo, Long idHistoria) {
+        List<Integer> tempoPorVideo = getSegmentVideoSize(tempoVideo)
+
+        List<String> videos = []
+        Integer tempoInicial = 0
+        tempoPorVideo.eachWithIndex{ Integer tempo, Integer i ->
+            String novoVideo = ApplicationConfig.getVideoBasePath() + "/historia_${idHistoria}/${i+1}_video.mp4"
+            cut(video, novoVideo, tempoInicial, tempo)
+            videos.add(novoVideo)
+            tempoInicial += tempo - 1
+        }
+
+        new File(video).delete()
+
+        return videos
     }
 
     String getSessionId() {
