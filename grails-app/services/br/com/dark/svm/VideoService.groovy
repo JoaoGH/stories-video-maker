@@ -83,6 +83,10 @@ class VideoService implements ServletAttributes {
         concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
         Integer tamanhoFinal = tamanhoHistoria(historia.id)
 
+        String videoOut = dir.absolutePath + "/video.mp4"
+        cut(videoBase, videoOut, 0, tamanhoFinal)
+
+        removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoTotalVideo)
     }
 
     Integer getTamanhoTotalVideo(String video) {
@@ -115,6 +119,19 @@ class VideoService implements ServletAttributes {
         }
 
         outputStream.close()
+    }
+
+    void cut(String video, String output, Integer tempoInicial, Integer tempoFinal) {
+        String comando = "HandBrakeCLI -i ${video} -o ${output} --start-at duration:${tempoInicial} --stop-at duration:${tempoFinal}"
+        runCommand(comando)
+    }
+
+    void removeUsedTimeFromBase(String videoBase, Integer inicioCorte, Integer fimCorte) {
+        String nomeVideo = videoBase.split("/").last()
+        String temp = ApplicationConfig.getVideoBasePath() + "/temp-" + nomeVideo
+        cut(videoBase, temp, inicioCorte, fimCorte)
+        new File(videoBase).delete()
+        new File(temp).renameTo(videoBase)
     }
 
     Integer tamanhoHistoria(Long id) {
