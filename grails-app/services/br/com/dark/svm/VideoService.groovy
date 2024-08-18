@@ -17,6 +17,48 @@ class VideoService implements ServletAttributes {
 
     HistoriaService historiaService
 
+    /**
+     * Uma Closure que realiza a execução de uma string. <br/>
+     * Pode receber uma string ou uma lista de strings (para argumentos com espaços). <br/>
+     * Imprime toda a saída, avisa para em caso de erro.
+     *
+     * */
+    Closure runCommand = { strList ->
+        assert (strList instanceof String || (strList instanceof List && strList.each({ it instanceof String })))
+        Process proc = strList.execute()
+
+        StringBuilder output = new StringBuilder()
+        StringBuilder error = new StringBuilder()
+
+        proc.inputStream.eachLine { String line ->
+            println(line)
+            output.append(line).append('\n')
+        }
+        proc.errorStream.eachLine { String line ->
+            println(line)
+            error.append(line).append('\n')
+        }
+
+        proc.out.close()
+        proc.waitFor()
+
+        print "[INFO] ( "
+        if (strList instanceof List) {
+            strList.each { print "${it} " }
+        } else {
+            print strList
+        }
+        println " )"
+
+        if (proc.exitValue()) {
+            println "gave the following error: "
+            println "[ERROR] ${proc.getErrorStream()}"
+        }
+        assert !proc.exitValue()
+
+        return output.toString()
+    }
+
     void createVideo(String videoName) {
         String videoBase = ApplicationConfig.getVideoBasePath() + "/" + videoName
 
