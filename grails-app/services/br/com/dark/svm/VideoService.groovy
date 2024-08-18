@@ -31,6 +31,24 @@ class VideoService implements ServletAttributes {
         File outputConteudo = Paths.get(dir.getAbsolutePath(), "conteudo.mp3").toFile()
         TiktokTTS ttsConteudo = new TiktokTTS(sessionId, Voice.PORTUGUESE_BR_MALE, historia.conteudo, outputConteudo)
         ttsConteudo.createAudioFile()
+
+        concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
+
+    }
+
+    void concatAudios(String titulo, String conteudo, Long id) {
+        String swipe = ApplicationConfig.getVideoBasePath() + "/swipe.mp3"
+        String pausa = ApplicationConfig.getVideoBasePath() + "/pausa.mp3"
+        String finalAudio = ApplicationConfig.getVideoBasePath() + "/historia_${id}/audio_final.mp3"
+
+        FileOutputStream outputStream = new FileOutputStream(finalAudio)
+
+        [swipe, titulo, swipe, conteudo, pausa].each { String mp3FilePath ->
+            byte[] mp3Bytes = Files.readAllBytes(Paths.get(mp3FilePath))
+            outputStream.write(mp3Bytes)
+        }
+
+        outputStream.close()
     }
 
     String getSessionId() {
