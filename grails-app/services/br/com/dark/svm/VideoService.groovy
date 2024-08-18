@@ -93,7 +93,7 @@ class VideoService implements ServletAttributes {
             throw new Exception("Não foi possível identificar o tamanho do vídeo original.")
         }
 
-        Integer retorno = Math.ceil(retornoComando as BigDecimal)?.toInteger()
+        Integer retorno = (retornoComando as BigDecimal)?.toInteger()
 
         if (!retorno) {
             throw new Exception("Não foi possível identificar o tamanho do vídeo original.")
