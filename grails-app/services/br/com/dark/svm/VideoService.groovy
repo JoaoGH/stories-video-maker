@@ -52,7 +52,7 @@ class VideoService implements ServletAttributes {
 
         if (proc.exitValue()) {
             println "gave the following error: "
-            println "[ERROR] ${proc.getErrorStream()}"
+            println "[ERROR] ${error.toString()}"
         }
         assert !proc.exitValue()
 
