@@ -90,6 +90,8 @@ class VideoService implements ServletAttributes {
 
         List<String> videosSegmentados = segmentVideo(videoOut, tamanhoFinal, historia.id)
 
+        String image = createImage(historia)
+
     }
 
     Integer getTamanhoTotalVideo(String video) {
@@ -209,6 +211,25 @@ class VideoService implements ServletAttributes {
         new File(video).delete()
 
         return videos
+    }
+
+    String createImage(Historia historia) {
+        File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
+        String finalImage = "${dir.absolutePath}/image.png"
+
+        String titulo = historia.titulo.bytes.encodeBase64().toString()
+
+        StringBuilder imagem = new StringBuilder()
+        imagem.append("python3 src/main/python/br/com/dark/svm/create_image.py")
+        imagem.append(" ${ApplicationConfig.getRedditBaseImagePath()}")
+        imagem.append(" ${finalImage}")
+        imagem.append(" ${titulo}")
+        imagem.append(" /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
+        imagem.append(" 20")
+
+        runCommand(imagem.toString())
+
+        return finalImage
     }
 
     String getSessionId() {

@@ -17,4 +17,8 @@ class ApplicationConfig {
         return getConfig().getProperty("video.base.path", String)
     }
 
+    static String getRedditBaseImagePath() {
+        return "./src/main/resources/reddit_base.png"
+    }
+
 }
