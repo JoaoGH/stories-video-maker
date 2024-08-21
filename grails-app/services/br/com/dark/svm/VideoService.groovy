@@ -66,7 +66,7 @@ class VideoService implements ServletAttributes {
             throw new Exception("Sem arquivo de video para uso.")
         }
 
-        Integer tamanhoTotalVideo = getTamanhoTotalVideo(videoBase)
+        Integer tamanhoVideoSemCortes = getTamanhoVideoSemCortes(videoBase)
 
         Historia historia = historiaService.getNextHistoria()
 
@@ -96,7 +96,7 @@ class VideoService implements ServletAttributes {
 
     }
 
-    Integer getTamanhoTotalVideo(String video) {
+    Integer getTamanhoVideoSemCortes(String video) {
         String command = "ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 ${video}"
         String retornoComando = runCommand(command)
 
