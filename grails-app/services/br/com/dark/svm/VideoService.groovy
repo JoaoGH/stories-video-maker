@@ -80,11 +80,13 @@ class VideoService implements ServletAttributes {
         TiktokTTS ttsConteudo = new TiktokTTS(sessionId, Voice.PORTUGUESE_BR_MALE, historia.conteudo, outputConteudo)
         ttsConteudo.createAudioFile()
 
-        concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
-        Integer tamanhoFinal = tamanhoHistoria(historia.id)
+        String audioFinal = concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
 
+        Integer tamanhoFinal = tamanhoHistoria(historia.id)
         String videoOut = dir.absolutePath + "/video.mp4"
         cut(videoBase, videoOut, 0, tamanhoFinal)
+
+        addAudiosIntoVideo(videoOut, audioFinal, dir.absolutePath)
 
         removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoTotalVideo)
 
@@ -111,7 +113,7 @@ class VideoService implements ServletAttributes {
         return retorno
     }
 
-    void concatAudios(String titulo, String conteudo, Long id) {
+    String concatAudios(String titulo, String conteudo, Long id) {
         String swipe = ApplicationConfig.getVideoBasePath() + "/swipe.mp3"
         String pausa = ApplicationConfig.getVideoBasePath() + "/pausa.mp3"
         String finalAudio = ApplicationConfig.getVideoBasePath() + "/historia_${id}/audio_final.mp3"
@@ -124,11 +126,20 @@ class VideoService implements ServletAttributes {
         }
 
         outputStream.close()
+
+        return finalAudio
     }
 
     void cut(String video, String output, Integer tempoInicial, Integer tempoFinal) {
         String comando = "HandBrakeCLI -i ${video} -o ${output} --start-at duration:${tempoInicial} --stop-at duration:${tempoFinal}"
         runCommand(comando)
+    }
+
+    void addAudiosIntoVideo(String video, String audio, String path) {
+        String temp = path + '/temp-' + video.split("/").last()
+        runCommand("ffmpeg -i ${video} -i ${audio} -c:v copy -c:a aac -strict experimental ${temp}")
+        new File(video).delete()
+        new File(temp).renameTo(video)
     }
 
     void removeUsedTimeFromBase(String videoBase, Integer inicioCorte, Integer fimCorte) {
