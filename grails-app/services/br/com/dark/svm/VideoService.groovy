@@ -179,7 +179,7 @@ class VideoService implements ServletAttributes {
      * */
     List<Integer> getSegmentVideoSize(Integer tempoTotal) {
         List<Integer> segments = []
-        Integer tempoMaximo = 57
+        Integer tempoMaximo = 50
 
         if (tempoTotal <= tempoMaximo) {
             return [tempoTotal]
