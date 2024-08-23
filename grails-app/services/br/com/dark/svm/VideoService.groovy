@@ -83,7 +83,7 @@ class VideoService implements ServletAttributes {
 
         String audioFinal = concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
 
-        Integer tamanhoFinal = tamanhoHistoria(historia.id)
+        Integer tamanhoFinal = getTamanhoAudio(audioFinal)
         String videoOut = path + "/video.mp4"
         cut(videoBase, videoOut, 0, tamanhoFinal)
 
@@ -112,6 +112,28 @@ class VideoService implements ServletAttributes {
         }
 
         return retorno
+    }
+
+    Integer getTamanhoAudio(String audio) {
+        BigDecimal durationInSeconds = BigDecimal.ZERO
+
+        FileInputStream fileInputStream = new FileInputStream(audio)
+        Bitstream bitstream = new Bitstream(fileInputStream)
+        Header header
+
+        try {
+            while ((header = bitstream.readFrame()) != null) {
+                durationInSeconds += header.ms_per_frame() / 1000.0
+                bitstream.closeFrame()
+            }
+        } catch (JavaLayerException e) {
+            e.printStackTrace()
+            throw new Exception("Erro ao calcular o tamanho final do audio.")
+        } finally {
+            fileInputStream.close()
+        }
+
+        return durationInSeconds.toInteger()
     }
 
     String concatAudios(String titulo, String conteudo, Long id) {
@@ -149,29 +171,6 @@ class VideoService implements ServletAttributes {
         cut(videoBase, temp, inicioCorte, fimCorte)
         new File(videoBase).delete()
         new File(temp).renameTo(videoBase)
-    }
-
-    Integer tamanhoHistoria(Long id) {
-        String finalAudio = ApplicationConfig.getVideoBasePath() + "/historia_${id}/audio_final.mp3"
-
-        BigDecimal durationInSeconds = BigDecimal.ZERO
-        def fileInputStream = new FileInputStream(finalAudio)
-        def bitstream = new Bitstream(fileInputStream)
-        Header header
-
-        try {
-            while ((header = bitstream.readFrame()) != null) {
-                durationInSeconds += header.ms_per_frame() / 1000.0
-                bitstream.closeFrame()
-            }
-        } catch (JavaLayerException e) {
-            e.printStackTrace()
-            throw new Exception("Erro ao calcular o tamanho final da história.")
-        } finally {
-            fileInputStream.close()
-        }
-
-        return durationInSeconds.toInteger()
     }
 
     /**
