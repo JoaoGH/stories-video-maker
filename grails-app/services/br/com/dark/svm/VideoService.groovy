@@ -87,7 +87,7 @@ class VideoService implements ServletAttributes {
 
         addAudiosIntoVideo(videoOut, audioFinal, path)
 
-        removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoTotalVideo)
+        removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoFinal)
 
         List<String> videosSegmentados = segmentVideo(videoOut, tamanhoFinal, historia.id)
 
