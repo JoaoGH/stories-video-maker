@@ -1,6 +1,7 @@
 package br.com.dark.svm
 
 import br.com.dark.svm.media.Audio
+import br.com.dark.svm.media.Video
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
 import grails.web.api.ServletAttributes
@@ -56,11 +57,22 @@ class VideoService implements ServletAttributes {
     }
 
     void createVideo(String videoName) {
-        String videoBase = ApplicationConfig.getVideoBasePath() + "/" + videoName
-        Integer tamanhoVideoBase = getTamanhoVideo(videoBase)
+        Video videoBase = new Video(ApplicationConfig.getVideoBasePath() + "/" + videoName)
 
-        if (!Files.exists(Path.of(videoBase))) {
+        if (!videoBase.fileAlreadyExists()) {
             throw new Exception("Sem arquivo de video para uso.")
+        }
+
+        Integer tamanhoVideoBase = videoBase.duracao
+        if (!tamanhoVideoBase) {
+            throw new Exception("Video sem tempo para uso.")
+        }
+
+        if (!videoBase.isVertical()) {
+            videoBase.crop()
+        }
+        if (videoBase.hasSound()) {
+            videoBase.removeSound()
         }
 
         Historia historia = historiaService.getNextHistoria()
@@ -86,61 +98,25 @@ class VideoService implements ServletAttributes {
         audioFinal.concat([swipe, titulo, swipe, conteudo, pausa])
 
         BigDecimal tamanhoFinal = audioFinal.getDuracao()
-        String videoOut = path + "/video.mp4"
-        cut(videoBase, videoOut, 0, tamanhoFinal.toInteger())
 
-        addAudiosIntoVideo(videoOut, audioFinal.path, path)
+        Video video = new Video(path + "/video.mp4")
+        videoBase.cut(0, tamanhoFinal.toInteger(), video.path)
 
-        removeUsedTimeFromBase(videoBase, tamanhoFinal.toInteger(), tamanhoVideoBase)
+        video.setAudio(audioFinal)
+        video.addAudio()
+
+        videoBase.cut(tamanhoFinal.toInteger(), tamanhoVideoBase)
 
         String image = createImage(historia)
 
         BigDecimal tempoTitulo = titulo.duracao + swipe.duracao
 
-        insertImageIntoVideo(path, videoOut, image, tempoTitulo)
-    }
-
-    Integer getTamanhoVideo(String video) {
-        String command = "ffprobe -v error -select_streams v:0 -show_entries stream=duration -of default=noprint_wrappers=1:nokey=1 ${video}"
-        String retornoComando = runCommand(command)
-
-        if (!retornoComando) {
-            throw new Exception("Não foi possível identificar o tamanho do vídeo original.")
-        }
-
-        Integer retorno = (retornoComando as BigDecimal)?.toInteger()
-
-        if (!retorno) {
-            throw new Exception("Não foi possível identificar o tamanho do vídeo original.")
-        }
-
-        return retorno
+        insertImageIntoVideo(path, video.path, image, tempoTitulo)
     }
 
     void cut(String video, String output, Integer tempoInicial, Integer tempoFinal) {
         String comando = "HandBrakeCLI -i ${video} -o ${output} --start-at duration:${tempoInicial} --stop-at duration:${tempoFinal}"
         runCommand(comando)
-    }
-
-    void addAudiosIntoVideo(String video, String audio, String path) {
-        String temp = path + '/temp-' + video.split("/").last()
-        StringBuilder command = new StringBuilder()
-        command.append("ffmpeg")
-        command.append(" -i ${video}")
-        command.append(" -i ${audio}")
-        command.append(" -c:v copy -c:a aac")
-        command.append(" -strict experimental ${temp}")
-        runCommand(command.toString())
-        new File(video).delete()
-        new File(temp).renameTo(video)
-    }
-
-    void removeUsedTimeFromBase(String videoBase, Integer inicioCorte, Integer fimCorte) {
-        String nomeVideo = videoBase.split("/").last()
-        String temp = ApplicationConfig.getVideoBasePath() + "/temp-" + nomeVideo
-        cut(videoBase, temp, inicioCorte, fimCorte)
-        new File(videoBase).delete()
-        new File(temp).renameTo(videoBase)
     }
 
     /**
