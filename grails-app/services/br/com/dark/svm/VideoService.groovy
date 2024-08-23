@@ -72,21 +72,22 @@ class VideoService implements ServletAttributes {
 
         File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
         dir.mkdir()
+        String path = dir.absolutePath
         String sessionId = getSessionId()
-        File outputTitulo = Paths.get(dir.getAbsolutePath(), "titulo.mp3").toFile()
+        File outputTitulo = Paths.get(path, "titulo.mp3").toFile()
         TiktokTTS ttsTitulo = new TiktokTTS(sessionId, Voice.PORTUGUESE_BR_MALE, historia.titulo, outputTitulo)
         ttsTitulo.createAudioFile()
-        File outputConteudo = Paths.get(dir.getAbsolutePath(), "conteudo.mp3").toFile()
+        File outputConteudo = Paths.get(path, "conteudo.mp3").toFile()
         TiktokTTS ttsConteudo = new TiktokTTS(sessionId, Voice.PORTUGUESE_BR_MALE, historia.conteudo, outputConteudo)
         ttsConteudo.createAudioFile()
 
         String audioFinal = concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
 
         Integer tamanhoFinal = tamanhoHistoria(historia.id)
-        String videoOut = dir.absolutePath + "/video.mp4"
+        String videoOut = path + "/video.mp4"
         cut(videoBase, videoOut, 0, tamanhoFinal)
 
-        addAudiosIntoVideo(videoOut, audioFinal, dir.absolutePath)
+        addAudiosIntoVideo(videoOut, audioFinal, path)
 
         removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoTotalVideo)
 
