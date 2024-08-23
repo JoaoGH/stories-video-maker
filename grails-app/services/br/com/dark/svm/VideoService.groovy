@@ -8,6 +8,7 @@ import javazoom.jl.decoder.Bitstream
 import javazoom.jl.decoder.Header
 import javazoom.jl.decoder.JavaLayerException
 
+import java.math.RoundingMode
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -93,6 +94,12 @@ class VideoService implements ServletAttributes {
 
         String image = createImage(historia)
 
+        BigDecimal tempoTitulo = getTamanhoAudio(outputTitulo.absolutePath)
+        BigDecimal tempoSwipe = getTamanhoAudio("/home/joao/Videos/stories-video-maker/swipe.mp3")
+
+        tempoTitulo += tempoSwipe
+
+        insertImageIntoVideo(path, videoOut, image, tempoTitulo)
     }
 
     Integer getTamanhoVideo(String video) {
@@ -245,6 +252,22 @@ class VideoService implements ServletAttributes {
         runCommand(imagem.toString())
 
         return finalImage
+    }
+
+    void insertImageIntoVideo(String path, String video, String image, BigDecimal tempoTitulo) {
+        String temp = path + "/temp-" + video.split("/").last()
+
+        StringBuilder command = new StringBuilder()
+        command.append("python3 src/main/python/br/com/dark/svm/add_image.py")
+        command.append(" ${video}")
+        command.append(" ${image}")
+        command.append(" ${tempoTitulo.setScale(2, RoundingMode.CEILING)}")
+        command.append(" ${temp}")
+
+        runCommand(command.toString())
+
+        new File(video).delete()
+        new File(temp).renameTo(video)
     }
 
     String getSessionId() {
