@@ -62,6 +62,7 @@ class VideoService implements ServletAttributes {
 
     void createVideo(String videoName) {
         String videoBase = ApplicationConfig.getVideoBasePath() + "/" + videoName
+        Integer tamanhoVideoBase = getTamanhoVideo(videoBase)
 
         if (!Files.exists(Path.of(videoBase))) {
             throw new Exception("Sem arquivo de video para uso.")
@@ -90,7 +91,7 @@ class VideoService implements ServletAttributes {
 
         addAudiosIntoVideo(videoOut, audioFinal, path)
 
-        removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoFinal)
+        removeUsedTimeFromBase(videoBase, tamanhoFinal.toInteger(), tamanhoVideoBase)
 
         String image = createImage(historia)
 
