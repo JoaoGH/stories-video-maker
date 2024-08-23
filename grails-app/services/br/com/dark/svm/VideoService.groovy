@@ -1,13 +1,11 @@
 package br.com.dark.svm
 
 import br.com.dark.svm.media.Audio
+import br.com.dark.svm.media.Image
 import br.com.dark.svm.media.Video
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
 import grails.web.api.ServletAttributes
-import java.math.RoundingMode
-import java.nio.file.Files
-import java.nio.file.Path
 
 @Transactional
 class VideoService implements ServletAttributes {
@@ -107,11 +105,12 @@ class VideoService implements ServletAttributes {
 
         videoBase.cut(tamanhoFinal.toInteger(), tamanhoVideoBase)
 
-        String image = createImage(historia)
+        Image image = new Image(path + '/image.png', historia)
+        image.createImage()
 
         BigDecimal tempoTitulo = titulo.duracao + swipe.duracao
 
-        insertImageIntoVideo(path, video.path, image, tempoTitulo)
+        video.addImage(image, tempoTitulo)
     }
 
     void cut(String video, String output, Integer tempoInicial, Integer tempoFinal) {
@@ -168,41 +167,6 @@ class VideoService implements ServletAttributes {
         new File(video).delete()
 
         return videos
-    }
-
-    String createImage(Historia historia) {
-        File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
-        String finalImage = "${dir.absolutePath}/image.png"
-
-        String titulo = historia.titulo.bytes.encodeBase64().toString()
-
-        StringBuilder imagem = new StringBuilder()
-        imagem.append("python3 src/main/python/br/com/dark/svm/create_image.py")
-        imagem.append(" ${ApplicationConfig.getRedditBaseImagePath()}")
-        imagem.append(" ${finalImage}")
-        imagem.append(" ${titulo}")
-        imagem.append(" /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
-        imagem.append(" 20")
-
-        runCommand(imagem.toString())
-
-        return finalImage
-    }
-
-    void insertImageIntoVideo(String path, String video, String image, BigDecimal tempoTitulo) {
-        String temp = path + "/temp-" + video.split("/").last()
-
-        StringBuilder command = new StringBuilder()
-        command.append("python3 src/main/python/br/com/dark/svm/add_image.py")
-        command.append(" ${video}")
-        command.append(" ${image}")
-        command.append(" ${tempoTitulo.setScale(2, RoundingMode.CEILING)}")
-        command.append(" ${temp}")
-
-        runCommand(command.toString())
-
-        new File(video).delete()
-        new File(temp).renameTo(video)
     }
 
     String getSessionId() {

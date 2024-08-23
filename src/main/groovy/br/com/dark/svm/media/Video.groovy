@@ -1,5 +1,7 @@
 package br.com.dark.svm.media
 
+import java.math.RoundingMode
+
 class Video extends Media {
 
     Audio audio
@@ -112,6 +114,22 @@ class Video extends Media {
         command.append(" -c:v copy -c:a aac")
         command.append(" -strict experimental ${outputFile}")
         runCommand(command.toString())
+        new File(path).delete()
+        new File(outputFile).renameTo(path)
+    }
+
+    void addImage(Image image, BigDecimal duracao) {
+        String outputFile = directory + '/temp-' + path.find(/([^\/]+$)/)
+
+        StringBuilder command = new StringBuilder()
+        command.append("python3 src/main/python/br/com/dark/svm/add_image.py")
+        command.append(" ${path}")
+        command.append(" ${image.path}")
+        command.append(" ${duracao.setScale(2, RoundingMode.CEILING)}")
+        command.append(" ${outputFile}")
+
+        runCommand(command.toString())
+
         new File(path).delete()
         new File(outputFile).renameTo(path)
     }
