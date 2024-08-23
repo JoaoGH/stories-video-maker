@@ -41,11 +41,21 @@ class VideoService implements ServletAttributes {
 
         Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
         titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
-        titulo.createAudioFileTTS(sessionId)
+        try {
+            titulo.createAudioFileTTS(sessionId)
+        } catch (Exception e) {
+            deletarHistoria(titulo.path)
+            throw e
+        }
 
         Audio conteudo = new Audio(path + "/conteudo.mp3", historia.conteudo)
         conteudo.setVoz(Voice.PORTUGUESE_BR_MALE)
-        conteudo.createAudioFileTTS(sessionId)
+        try {
+            conteudo.createAudioFileTTS(sessionId)
+        } catch (Exception e) {
+            deletarHistoria(conteudo.path)
+            throw e
+        }
 
         Audio swipe = new Audio(ApplicationConfig.getVideoBasePath() + "/swipe.mp3")
         Audio pausa = new Audio(ApplicationConfig.getVideoBasePath() + "/pausa.mp3")
@@ -124,6 +134,10 @@ class VideoService implements ServletAttributes {
 
     String getSessionId() {
         return params.sessionId
+    }
+
+    void deletarHistoria(String path) {
+        new File(path).delete()
     }
 
 }
