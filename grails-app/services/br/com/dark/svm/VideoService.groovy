@@ -70,8 +70,10 @@ class VideoService implements ServletAttributes {
 
         File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
         dir.mkdir()
+
         String path = dir.absolutePath
         String sessionId = getSessionId()
+
         File outputTitulo = Paths.get(path, "titulo.mp3").toFile()
         TiktokTTS ttsTitulo = new TiktokTTS(sessionId, Voice.PORTUGUESE_BR_MALE, historia.titulo, outputTitulo)
         ttsTitulo.createAudioFile()
