@@ -7,18 +7,16 @@ import javazoom.jl.decoder.Header
 import javazoom.jl.decoder.JavaLayerException
 
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 
 class Audio extends Media {
 
     String conteudo
-    BigDecimal duracao
     Voice voz
 
     Audio(String path) {
         this.path = path
-        if (Files.exists(Path.of(path))) {
+        if (fileAlreadyExists()) {
             this.duracao = getTempoDuracao()
         }
     }
