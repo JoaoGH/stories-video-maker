@@ -66,8 +66,6 @@ class VideoService implements ServletAttributes {
             throw new Exception("Sem arquivo de video para uso.")
         }
 
-        Integer tamanhoVideoSemCortes = getTamanhoVideo(videoBase)
-
         Historia historia = historiaService.getNextHistoria()
 
         File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
