@@ -83,9 +83,9 @@ class VideoService implements ServletAttributes {
 
         String audioFinal = concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
 
-        Integer tamanhoFinal = getTamanhoAudio(audioFinal)
+        BigDecimal tamanhoFinal = getTamanhoAudio(audioFinal)
         String videoOut = path + "/video.mp4"
-        cut(videoBase, videoOut, 0, tamanhoFinal)
+        cut(videoBase, videoOut, 0, tamanhoFinal.toInteger())
 
         addAudiosIntoVideo(videoOut, audioFinal, path)
 
@@ -114,7 +114,7 @@ class VideoService implements ServletAttributes {
         return retorno
     }
 
-    Integer getTamanhoAudio(String audio) {
+    BigDecimal getTamanhoAudio(String audio) {
         BigDecimal durationInSeconds = BigDecimal.ZERO
 
         FileInputStream fileInputStream = new FileInputStream(audio)
@@ -133,7 +133,7 @@ class VideoService implements ServletAttributes {
             fileInputStream.close()
         }
 
-        return durationInSeconds.toInteger()
+        return durationInSeconds
     }
 
     String concatAudios(String titulo, String conteudo, Long id) {
