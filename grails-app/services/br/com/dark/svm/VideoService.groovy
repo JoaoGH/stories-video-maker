@@ -160,7 +160,13 @@ class VideoService implements ServletAttributes {
 
     void addAudiosIntoVideo(String video, String audio, String path) {
         String temp = path + '/temp-' + video.split("/").last()
-        runCommand("ffmpeg -i ${video} -i ${audio} -c:v copy -c:a aac -strict experimental ${temp}")
+        StringBuilder command = new StringBuilder()
+        command.append("ffmpeg")
+        command.append(" -i ${video}")
+        command.append(" -i ${audio}")
+        command.append(" -c:v copy -c:a aac")
+        command.append(" -strict experimental ${temp}")
+        runCommand(command.toString())
         new File(video).delete()
         new File(temp).renameTo(video)
     }
