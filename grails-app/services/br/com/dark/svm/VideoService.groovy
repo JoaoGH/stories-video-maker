@@ -1,17 +1,12 @@
 package br.com.dark.svm
 
-import br.com.dark.svm.tts.TiktokTTS
+import br.com.dark.svm.media.Audio
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
 import grails.web.api.ServletAttributes
-import javazoom.jl.decoder.Bitstream
-import javazoom.jl.decoder.Header
-import javazoom.jl.decoder.JavaLayerException
-
 import java.math.RoundingMode
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
 
 @Transactional
 class VideoService implements ServletAttributes {
@@ -76,29 +71,31 @@ class VideoService implements ServletAttributes {
         String path = dir.absolutePath
         String sessionId = getSessionId()
 
-        File outputTitulo = Paths.get(path, "titulo.mp3").toFile()
-        TiktokTTS ttsTitulo = new TiktokTTS(sessionId, Voice.PORTUGUESE_BR_MALE, historia.titulo, outputTitulo)
-        ttsTitulo.createAudioFile()
-        File outputConteudo = Paths.get(path, "conteudo.mp3").toFile()
-        TiktokTTS ttsConteudo = new TiktokTTS(sessionId, Voice.PORTUGUESE_BR_MALE, historia.conteudo, outputConteudo)
-        ttsConteudo.createAudioFile()
+        Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
+        titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
+        titulo.createAudioFileTTS(sessionId)
 
-        String audioFinal = concatAudios(outputTitulo.absolutePath, outputConteudo.absolutePath, historia.id)
+        Audio conteudo = new Audio(path + "/conteudo.mp3", historia.conteudo)
+        conteudo.setVoz(Voice.PORTUGUESE_BR_MALE)
+        conteudo.createAudioFileTTS(sessionId)
 
-        BigDecimal tamanhoFinal = getTamanhoAudio(audioFinal)
+        Audio swipe = new Audio(ApplicationConfig.getVideoBasePath() + "/swipe.mp3")
+        Audio pausa = new Audio(ApplicationConfig.getVideoBasePath() + "/pausa.mp3")
+
+        Audio audioFinal = new Audio(path + "/audio_final.mp3")
+        audioFinal.concat([swipe, titulo, swipe, conteudo, pausa])
+
+        BigDecimal tamanhoFinal = audioFinal.getDuracao()
         String videoOut = path + "/video.mp4"
         cut(videoBase, videoOut, 0, tamanhoFinal.toInteger())
 
-        addAudiosIntoVideo(videoOut, audioFinal, path)
+        addAudiosIntoVideo(videoOut, audioFinal.path, path)
 
         removeUsedTimeFromBase(videoBase, tamanhoFinal.toInteger(), tamanhoVideoBase)
 
         String image = createImage(historia)
 
-        BigDecimal tempoTitulo = getTamanhoAudio(outputTitulo.absolutePath)
-        BigDecimal tempoSwipe = getTamanhoAudio("/home/joao/Videos/stories-video-maker/swipe.mp3")
-
-        tempoTitulo += tempoSwipe
+        BigDecimal tempoTitulo = titulo.duracao + swipe.duracao
 
         insertImageIntoVideo(path, videoOut, image, tempoTitulo)
     }
@@ -118,45 +115,6 @@ class VideoService implements ServletAttributes {
         }
 
         return retorno
-    }
-
-    BigDecimal getTamanhoAudio(String audio) {
-        BigDecimal durationInSeconds = BigDecimal.ZERO
-
-        FileInputStream fileInputStream = new FileInputStream(audio)
-        Bitstream bitstream = new Bitstream(fileInputStream)
-        Header header
-
-        try {
-            while ((header = bitstream.readFrame()) != null) {
-                durationInSeconds += header.ms_per_frame() / 1000.0
-                bitstream.closeFrame()
-            }
-        } catch (JavaLayerException e) {
-            e.printStackTrace()
-            throw new Exception("Erro ao calcular o tamanho final do audio.")
-        } finally {
-            fileInputStream.close()
-        }
-
-        return durationInSeconds
-    }
-
-    String concatAudios(String titulo, String conteudo, Long id) {
-        String swipe = ApplicationConfig.getVideoBasePath() + "/swipe.mp3"
-        String pausa = ApplicationConfig.getVideoBasePath() + "/pausa.mp3"
-        String finalAudio = ApplicationConfig.getVideoBasePath() + "/historia_${id}/audio_final.mp3"
-
-        FileOutputStream outputStream = new FileOutputStream(finalAudio)
-
-        [swipe, titulo, swipe, conteudo, pausa].each { String mp3FilePath ->
-            byte[] mp3Bytes = Files.readAllBytes(Paths.get(mp3FilePath))
-            outputStream.write(mp3Bytes)
-        }
-
-        outputStream.close()
-
-        return finalAudio
     }
 
     void cut(String video, String output, Integer tempoInicial, Integer tempoFinal) {
