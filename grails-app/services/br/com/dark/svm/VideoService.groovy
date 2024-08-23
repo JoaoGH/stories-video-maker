@@ -91,8 +91,6 @@ class VideoService implements ServletAttributes {
 
         removeUsedTimeFromBase(videoBase, tamanhoFinal, tamanhoFinal)
 
-        List<String> videosSegmentados = segmentVideo(videoOut, tamanhoFinal, historia.id)
-
         String image = createImage(historia)
 
     }
