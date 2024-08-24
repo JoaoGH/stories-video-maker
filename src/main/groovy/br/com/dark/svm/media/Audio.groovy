@@ -2,6 +2,7 @@ package br.com.dark.svm.media
 
 import br.com.dark.svm.tts.TiktokTTS
 import br.com.dark.svm.tts.Voice
+import groovy.util.logging.Slf4j
 import javazoom.jl.decoder.Bitstream
 import javazoom.jl.decoder.Header
 import javazoom.jl.decoder.JavaLayerException
@@ -9,6 +10,7 @@ import javazoom.jl.decoder.JavaLayerException
 import java.nio.file.Files
 import java.nio.file.Paths
 
+@Slf4j
 class Audio extends Media {
 
     String conteudo
@@ -32,6 +34,7 @@ class Audio extends Media {
     void createAudioFileTTS(String sessionId) {
         File file = Paths.get(path).toFile()
         TiktokTTS ttsTitulo = new TiktokTTS(sessionId, voz, conteudo, file)
+        log.info("Criar arquivo de audio '${path}'.")
         ttsTitulo.createAudioFile()
         this.duracao = getTempoDuracao()
     }
@@ -44,6 +47,7 @@ class Audio extends Media {
         Bitstream bitstream = new Bitstream(fileInputStream)
         Header header
 
+        log.info("Obter duração do audio ${path}.")
         try {
             while ((header = bitstream.readFrame()) != null) {
                 durationInSeconds += header.ms_per_frame() / 1000.0
@@ -62,6 +66,7 @@ class Audio extends Media {
     void concat(List<Audio> audios) {
         FileOutputStream outputStream = new FileOutputStream(path)
 
+        log.info("Concatenar arquivos de audio ${audios*.path.toString()}.")
         audios*.path.each { String mp3FilePath ->
             byte[] mp3Bytes = Files.readAllBytes(Paths.get(mp3FilePath))
             outputStream.write(mp3Bytes)
