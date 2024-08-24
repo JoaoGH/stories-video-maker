@@ -12,7 +12,7 @@ enum SpeechBreakMode {
             StringBuilder builder = new StringBuilder();
             int nbOfWords = 0;
             boolean hadPunctuation = false;
-            List<String> words = getWords(speech)
+            List<String> words = TextHelper.getWords(speech)
 
             for (String word : words) {
                 nbOfWords++;
@@ -22,7 +22,7 @@ enum SpeechBreakMode {
                     nbOfWords = 0;
                 }
                 builder.append(word).append("+");
-                hadPunctuation = hasPunctuation(word);
+                hadPunctuation = TextHelper.hasPunctuation(word);
             }
 
             speeches.add(builder.toString().stripTrailing());
@@ -38,7 +38,7 @@ enum SpeechBreakMode {
             StringBuilder builder = new StringBuilder();
             int nbOfWords = 0;
 
-            for (String word : getWords(speech)) {
+            for (String word : TextHelper.getWords(speech)) {
                 nbOfWords++;
                 // 294 and 55 are based on a phenomenological study with the Test Class
                 // I don't really know exactly if those data are exact. But for now it worked so...
@@ -59,14 +59,6 @@ enum SpeechBreakMode {
     abstract List<String> getSpeechParts(String speech);
 
     SpeechBreakMode() {
-    }
-
-    static String[] getWords(String speech) {
-        return TextHelper.getWords(speech)
-    }
-
-    static boolean hasPunctuation(String word) {
-        return word.contains(".") || word.contains(",") || word.contains(";");
     }
 
 }

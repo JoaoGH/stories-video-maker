@@ -11,6 +11,8 @@ class TextHelper {
     }
 
     static String[] getWords(String speech, Locale locale) {
+        speech = speech.replaceAll("\n", " ")
+        speech = speech.replaceAll("\t", " ")
         speech = speech.replaceAll("\\+", "plus")
         speech = speech.replaceAll(" ", "+")
         speech = speech.replaceAll("&", getArtigoEByLocale(locale.toString()))
@@ -26,4 +28,9 @@ class TextHelper {
                 return "and"
         }
     }
+
+    static Boolean hasPunctuation(String word) {
+        return ['.', ';', '?', '!', ':'].any({ String it -> word.contains(it)})
+    }
+
 }
