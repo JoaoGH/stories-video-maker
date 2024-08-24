@@ -1,5 +1,6 @@
 package br.com.dark.svm
 
+import br.com.dark.svm.exception.InvalidVideo
 import br.com.dark.svm.media.Audio
 import br.com.dark.svm.media.Image
 import br.com.dark.svm.media.Video
@@ -19,7 +20,7 @@ class VideoService implements ServletAttributes {
             throw new Exception("Sem arquivo de video para uso.")
         }
 
-        Integer tamanhoVideoBase = videoBase.duracao
+        BigDecimal tamanhoVideoBase = videoBase.duracao
         if (!tamanhoVideoBase) {
             throw new Exception("Video sem tempo para uso.")
         }
@@ -71,7 +72,7 @@ class VideoService implements ServletAttributes {
         video.setAudio(audioFinal)
         video.addAudio()
 
-        videoBase.cut(tamanhoFinal.toInteger(), tamanhoVideoBase)
+        videoBase.cut(tamanhoFinal.toInteger(), tamanhoVideoBase.toInteger())
 
         Image image = new Image(path + '/image.png', historia)
         image.createImage()
