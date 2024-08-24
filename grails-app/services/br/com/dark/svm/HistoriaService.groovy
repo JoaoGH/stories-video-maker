@@ -4,6 +4,7 @@ import br.com.dark.svm.enums.HistoriaOrigemEnum
 import br.com.dark.svm.enums.HistoriaStatusEnum
 import br.com.dark.svm.helper.TextHelper
 import grails.gorm.transactions.Transactional
+import grails.web.databinding.DataBindingUtils
 import javassist.NotFoundException
 import java.time.LocalDateTime
 
@@ -22,6 +23,13 @@ class HistoriaService {
         record.save(flush: true, failOnError: true)
 
         return record
+    }
+
+    Historia update(Map parameters, Historia historia) {
+        DataBindingUtils.bindObjectToInstance(historia, parameters)
+        historia.save(flush: true)
+
+        return historia
     }
 
     Historia getNextHistoria() {

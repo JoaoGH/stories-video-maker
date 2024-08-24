@@ -1,5 +1,6 @@
 package br.com.dark.svm
 
+import br.com.dark.svm.enums.HistoriaStatusEnum
 import br.com.dark.svm.exception.InvalidVideoException
 import br.com.dark.svm.media.Audio
 import br.com.dark.svm.media.Image
@@ -7,6 +8,8 @@ import br.com.dark.svm.media.Video
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
 import grails.web.api.ServletAttributes
+
+import java.time.LocalDateTime
 
 @Transactional
 class VideoService implements ServletAttributes {
@@ -82,6 +85,9 @@ class VideoService implements ServletAttributes {
         BigDecimal tempoTitulo = titulo.duracao + swipe.duracao
 
         video.addImage(image, tempoTitulo)
+
+        log.info("Atualizar ${historia.toString()}.")
+        historiaService.update([status: HistoriaStatusEnum.CRIADA.getValue(), dataHoraCriacao: LocalDateTime.now()], historia)
 
         log.info("Criação do video ${historia.toString()} finalizado.")
     }
