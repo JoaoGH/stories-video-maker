@@ -38,4 +38,13 @@ class RedditService implements ServletAttributes {
 
         return retorno
     }
+
+    Map list() {
+        Map retorno = [success: true]
+
+        retorno.data = historiaService.list()
+
+        return retorno
+    }
+
 }

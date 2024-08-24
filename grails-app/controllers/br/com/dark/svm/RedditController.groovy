@@ -11,11 +11,13 @@ class RedditController implements ControllerExceptionHandler {
 	static responseFormats = ['json']
 	
     def index() {
-        respond([:], status: HttpStatus.OK)
+        Map retorno = redditService.list()
+        respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
     }
 
     def save() {
         Map retorno = redditService.getAmITheAsshole()
         respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
     }
+
 }

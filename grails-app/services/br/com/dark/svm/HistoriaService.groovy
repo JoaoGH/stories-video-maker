@@ -11,6 +11,12 @@ import java.time.LocalDateTime
 @Transactional
 class HistoriaService {
 
+    List<Historia> list() {
+        List<Historia> retorno = Historia.createCriteria().list {}
+
+        return retorno
+    }
+
     Historia save(Map data, HistoriaOrigemEnum origem) {
         Historia record = new Historia()
         record.setTitulo(TextHelper.removerEmoji(data.title.toString()))

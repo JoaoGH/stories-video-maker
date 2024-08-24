@@ -9,6 +9,14 @@ import org.grails.web.json.JSONObject
 class JsonHelper {
 
     /**
+     * Transforma uma DomainClass em uma String JSON.
+     *
+     * */
+    static String toJson(DomainClass data) {
+        return new JSON(data).toString()
+    }
+
+    /**
      * Transforma um Map em uma String JSON.
      *
      * */
@@ -29,6 +37,14 @@ class JsonHelper {
      *
      * */
     static JSONObject toJSONObject(Map data) {
+        return new JSONObject(toJson(data))
+    }
+
+    /**
+     * Transforma uma DomainClass em um JSONObject.
+     *
+     * */
+    static JSONObject toJSONObject(DomainClass data) {
         return new JSONObject(toJson(data))
     }
 
