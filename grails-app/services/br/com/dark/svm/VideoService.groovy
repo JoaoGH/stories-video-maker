@@ -45,6 +45,7 @@ class VideoService implements ServletAttributes {
         try {
             titulo.createAudioFileTTS(sessionId)
         } catch (Exception e) {
+            log.error("Erro ao criar arquivo de áudio para '${historia.toString()}'. Pasta será deletada.")
             deletarHistoria(titulo.path)
             throw e
         }
@@ -54,6 +55,7 @@ class VideoService implements ServletAttributes {
         try {
             conteudo.createAudioFileTTS(sessionId)
         } catch (Exception e) {
+            log.error("Erro ao criar arquivo de áudio para '${historia.toString()}'. Pasta será deletada.")
             deletarHistoria(conteudo.path)
             throw e
         }
@@ -80,6 +82,8 @@ class VideoService implements ServletAttributes {
         BigDecimal tempoTitulo = titulo.duracao + swipe.duracao
 
         video.addImage(image, tempoTitulo)
+
+        log.info("Criação do video ${historia.toString()} finalizado.")
     }
 
     /**

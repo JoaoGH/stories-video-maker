@@ -1,5 +1,6 @@
 package br.com.dark.svm.media
 
+import br.com.dark.svm.exception.InvalidAudioException
 import br.com.dark.svm.tts.TiktokTTS
 import br.com.dark.svm.tts.Voice
 import groovy.util.logging.Slf4j
@@ -54,8 +55,8 @@ class Audio extends Media {
                 bitstream.closeFrame()
             }
         } catch (JavaLayerException e) {
-            e.printStackTrace()
-            throw new Exception("Erro ao calcular o tamanho final do audio '${path}'.")
+            log.error("Erro ao calcular o tamanho final do audio '${path}'.")
+            throw new InvalidAudioException(e)
         } finally {
             fileInputStream.close()
         }

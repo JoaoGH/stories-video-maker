@@ -14,6 +14,15 @@ abstract class AbstractApiException extends Exception implements ServletAttribut
     private HttpStatus status = HttpStatus.BAD_REQUEST
     private String path = request.getRequestURI()
 
+    AbstractApiException(String message) {
+        super(message)
+    }
+
+    AbstractApiException(String message, HttpStatus status) {
+        this(message)
+        this.status = status
+    }
+
     AbstractApiException(Exception e) {
         super(e)
     }

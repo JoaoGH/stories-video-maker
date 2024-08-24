@@ -27,4 +27,10 @@ class Historia {
         status maxSize: 1
         dataHoraCriacao nullable: true
     }
+
+    @Override
+    String toString() {
+        return "Historia: [id: ${id}, titulo: ${titulo}]"
+    }
+
 }

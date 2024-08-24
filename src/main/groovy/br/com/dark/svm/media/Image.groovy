@@ -2,7 +2,9 @@ package br.com.dark.svm.media
 
 import br.com.dark.svm.ApplicationConfig
 import br.com.dark.svm.Historia
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class Image extends Media {
 
     Historia historia
@@ -20,6 +22,7 @@ class Image extends Media {
     void createImage() {
         String titulo = historia.titulo.bytes.encodeBase64().toString()
 
+        log.info("Criar imagem '${path}'.")
         StringBuilder imagem = new StringBuilder()
         imagem.append("python3 src/main/python/br/com/dark/svm/create_image.py")
         imagem.append(" ${ApplicationConfig.getRedditBaseImagePath()}")
