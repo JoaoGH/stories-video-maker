@@ -2,9 +2,9 @@ package br.com.dark.svm.exception
 
 import org.springframework.http.HttpStatus
 
-class InvalidVideo extends AbstractApiException {
+class InvalidVideoException extends AbstractApiException {
 
-    InvalidVideo(String message) {
+    InvalidVideoException(String message) {
         super(message, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 

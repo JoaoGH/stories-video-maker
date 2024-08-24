@@ -1,6 +1,6 @@
 package br.com.dark.svm
 
-import br.com.dark.svm.exception.InvalidVideo
+import br.com.dark.svm.exception.InvalidVideoException
 import br.com.dark.svm.media.Audio
 import br.com.dark.svm.media.Image
 import br.com.dark.svm.media.Video
@@ -17,12 +17,12 @@ class VideoService implements ServletAttributes {
         Video videoBase = new Video(ApplicationConfig.getVideoBasePath() + "/" + videoName)
 
         if (!videoBase.fileAlreadyExists()) {
-            throw new InvalidVideo("Sem arquivo de video para uso.")
+            throw new InvalidVideoException("Sem arquivo de video para uso.")
         }
 
         BigDecimal tamanhoVideoBase = videoBase.duracao
         if (!tamanhoVideoBase) {
-            throw new InvalidVideo("Video sem tempo para uso.")
+            throw new InvalidVideoException("Video sem tempo para uso.")
         }
 
         if (!videoBase.isVertical()) {
