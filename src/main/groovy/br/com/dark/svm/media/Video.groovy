@@ -1,5 +1,7 @@
 package br.com.dark.svm.media
 
+import br.com.dark.svm.exception.InvalidVideo
+
 import java.math.RoundingMode
 
 class Video extends Media {
@@ -25,13 +27,13 @@ class Video extends Media {
         String retornoComando = runCommand(command.toString())
 
         if (!retornoComando) {
-            throw new Exception("Não foi possível identificar o tamanho do vídeo '${path}'.")
+            throw new InvalidVideo("Não foi possível identificar o tamanho do vídeo '${path}'.")
         }
 
         BigDecimal retorno = (retornoComando as BigDecimal)
 
         if (!retorno) {
-            throw new Exception("Não foi possível identificar o tamanho do vídeo '${path}'.")
+            throw new InvalidVideo("Não foi possível identificar o tamanho do vídeo '${path}'.")
         }
 
         return retorno

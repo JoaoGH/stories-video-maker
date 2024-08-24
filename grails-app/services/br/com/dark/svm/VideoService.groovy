@@ -17,12 +17,12 @@ class VideoService implements ServletAttributes {
         Video videoBase = new Video(ApplicationConfig.getVideoBasePath() + "/" + videoName)
 
         if (!videoBase.fileAlreadyExists()) {
-            throw new Exception("Sem arquivo de video para uso.")
+            throw new InvalidVideo("Sem arquivo de video para uso.")
         }
 
         BigDecimal tamanhoVideoBase = videoBase.duracao
         if (!tamanhoVideoBase) {
-            throw new Exception("Video sem tempo para uso.")
+            throw new InvalidVideo("Video sem tempo para uso.")
         }
 
         if (!videoBase.isVertical()) {
