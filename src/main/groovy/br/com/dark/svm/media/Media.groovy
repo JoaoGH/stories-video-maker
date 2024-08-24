@@ -1,8 +1,11 @@
 package br.com.dark.svm.media
 
+import groovy.util.logging.Slf4j
+
 import java.nio.file.Files
 import java.nio.file.Path
 
+@Slf4j
 abstract class Media {
 
     String path
@@ -32,29 +35,27 @@ abstract class Media {
         StringBuilder error = new StringBuilder()
 
         proc.inputStream.eachLine { String line ->
-            println(line)
+            log.debug(line)
             output.append(line).append('\n')
         }
         proc.errorStream.eachLine { String line ->
-            println(line)
+            log.debug(line)
             error.append(line).append('\n')
         }
 
         proc.out.close()
         proc.waitFor()
 
-        print "[INFO] ( "
         if (strList instanceof List) {
-            strList.each { print "${it} " }
+            log.info((strList as List).join(" "))
         } else {
-            print strList
+            log.info(strList.toString())
         }
-        println " )"
 
         if (proc.exitValue()) {
-            println "gave the following error: "
-            println "[ERROR] ${error.toString()}"
+            log.error("gave the following error: ${error.toString()}")
         }
+
         assert !proc.exitValue()
 
         return output.toString().trim()
