@@ -24,6 +24,9 @@ class Audio extends Media {
     Audio(String path, String conteudo) {
         this.path = path
         this.conteudo = conteudo
+        if (fileAlreadyExists()) {
+            this.duracao = getTempoDuracao()
+        }
     }
 
     void createAudioFileTTS(String sessionId) {
