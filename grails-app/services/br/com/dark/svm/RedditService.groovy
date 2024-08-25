@@ -43,6 +43,7 @@ class RedditService implements ServletAttributes {
         Map retorno = [success: true]
 
         retorno.data = historiaService.list()
+        retorno.total = retorno.data?.size() ?: 0
 
         return retorno
     }
