@@ -13,7 +13,8 @@ class VideoController implements ControllerExceptionHandler {
     static responseFormats = ['json']
 
     static allowedMethods = [
-            create: "POST"
+            create: "POST",
+            prepareScenario: "PATCH"
     ]
 	
     def create(VideoCommand command) {
@@ -23,5 +24,11 @@ class VideoController implements ControllerExceptionHandler {
         Map retorno = [success: true]
         videoService.createVideo(command)
         respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
+    }
+
+    def prepareScenario() {
+        Map retorno = videoService.prepareScenario()
+        respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
+
     }
 }

@@ -18,6 +18,38 @@ class VideoService {
 
     HistoriaService historiaService
 
+    Map prepareScenario() {
+        List<String> nomeVideos = BackgroundVideoEnum.values()*.videoName
+        String base = ApplicationConfig.getVideoBasePath()
+        List<Video> videos = nomeVideos.collect { String it -> new Video("${base}/${it}") }
+        List<Audio> audios = [ApplicationConfig.getSwipe(), ApplicationConfig.getLastSwipe()]
+
+        prepareScenario(videos, audios)
+    }
+
+    Map prepareScenario(List<Video> videos, List<Audio> audios) {
+        Map retorno = [sucess: true, videos: [], audios: []]
+
+        videos.each { Video video ->
+            if (!video.isVertical()) {
+                video.crop()
+            }
+
+            if (video.hasSound()) {
+                video.removeSound()
+            }
+
+            retorno.videos << video.path
+        }
+
+        audios.each { Audio it ->
+            it.encode()
+            retorno.audios << it.path
+        }
+
+        return retorno
+    }
+
     void createVideo(VideoCommand command) {
         BackgroundVideoEnum backgroundVideo = BackgroundVideoEnum.value(command.background)
         String videoBase = ApplicationConfig.getVideoBasePath() + "/" + backgroundVideo.videoName
@@ -50,12 +82,10 @@ class VideoService {
             throw new InvalidVideoException("Video sem tempo para uso.")
         }
 
-        if (!videoBase.isVertical()) {
-            videoBase.crop()
-        }
-        if (videoBase.hasSound()) {
-            videoBase.removeSound()
-        }
+        Audio swipe = ApplicationConfig.getSwipe()
+        Audio pausa = ApplicationConfig.getLastSwipe()
+
+        prepareScenario([videoBase], [swipe, pausa])
 
         Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
         titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
@@ -64,9 +94,6 @@ class VideoService {
         Audio conteudo = new Audio(path + "/conteudo.mp3", historia.conteudo)
         conteudo.setVoz(Voice.PORTUGUESE_BR_MALE)
         conteudo.createAudioFileTTS(sessionId)
-
-        Audio swipe = ApplicationConfig.getSwipe()
-        Audio pausa = ApplicationConfig.getLastSwipe()
 
         Audio audioFinal = new Audio(path + "/audio_final.mp3")
         audioFinal.concat([swipe, titulo, swipe, conteudo, pausa])
