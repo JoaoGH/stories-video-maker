@@ -21,8 +21,7 @@ class VideoController implements ControllerExceptionHandler {
         if (!command.validate()) {
             throw new ParametersException(command.errors)
         }
-        Map retorno = [success: true]
-        videoService.createVideo(command)
+        Map retorno = videoService.createVideo(command)
         respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
     }
 

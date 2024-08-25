@@ -51,7 +51,7 @@ class VideoService {
         return retorno
     }
 
-    void createVideo(VideoCommand command) {
+    Map createVideo(VideoCommand command) {
         BackgroundVideoEnum backgroundVideo = BackgroundVideoEnum.value(command.background)
         String videoBase = ApplicationConfig.getVideoBasePath() + "/" + backgroundVideo.videoName
         Historia historia
@@ -60,10 +60,11 @@ class VideoService {
         } else {
             historia = historiaService.getNextHistoria(HistoriaOrigemEnum.value(command.origem))
         }
-        createVideo(historia, videoBase, command.sessionId, command.shorts)
+        return createVideo(historia, videoBase, command.sessionId, command.shorts)
     }
 
-    void createVideo(Historia historia, String videoBasePath, String sessionId, Boolean makeShorts) {
+    Map createVideo(Historia historia, String videoBasePath, String sessionId, Boolean makeShorts) {
+        Map retorno = [success: true]
         String path = ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}"
 
         if (DirectoryHelper.folderExists(path)) {
@@ -101,6 +102,12 @@ class VideoService {
 
         BigDecimal tamanhoFinal = audioFinal.getDuracao()
 
+        if (tamanhoVideoBase < tamanhoFinal) {
+            retorno.success = false
+            retorno.message = "Video base com ${formatTime(tamanhoVideoBase.toInteger())} insuficiente para ${formatTime(tamanhoFinal.toInteger())}"
+            return retorno
+        }
+
         Video video = new Video(path + "/video.mp4")
         videoBase.cut(0, tamanhoFinal.toInteger(), video.path)
 
@@ -121,15 +128,30 @@ class VideoService {
 
         log.info("Criação do video ${historia.toString()} finalizado.")
 
+        retorno.historia = historia.toString()
+        retorno.path = video.path
+
         if (!makeShorts) {
             log.info("Remover arquivos restantes.")
             removeFiles([titulo, conteudo, audioFinal, image])
+            return retorno
         }
 
+        retorno.message = "Necessário adicionar legendas em 'https://www.capcut.com/' antes de criar os shorts."
+
+        return retorno
     }
 
     void removeFiles(List<Media> arquivosExtras) {
         arquivosExtras*.delete()
+    }
+
+    protected String formatTime(Integer totalSeconds) {
+        Integer hours = (Integer) (totalSeconds / 3600);
+        Integer minutes = (Integer) ((totalSeconds % 3600) / 60);
+        Integer seconds = totalSeconds % 60;
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
 }
