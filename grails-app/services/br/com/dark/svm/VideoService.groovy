@@ -127,7 +127,11 @@ class VideoService {
         video.addImage(image, tempoTitulo)
 
         log.info("Atualizar ${historia.toString()}.")
-        historiaService.update([status: HistoriaStatusEnum.CRIADA.getValue(), dataHoraCriacao: LocalDateTime.now()], historia)
+        Map novosValores = [
+                status         : !makeShorts ? HistoriaStatusEnum.CRIADA.getValue() : historia.status,
+                dataHoraCriacao: LocalDateTime.now()
+        ]
+        historiaService.update(novosValores, historia)
 
         log.info("Criação do video ${historia.toString()} finalizado.")
 
@@ -195,6 +199,13 @@ class VideoService {
 
         retorno.videos = shorts.videosCurtos.path
         retorno.arquivosRemovidos = medias.path
+
+        log.info("Atualizar ${historia.toString()}.")
+        Map novosValores = [
+                status         : HistoriaStatusEnum.CRIADA.getValue(),
+                dataHoraCriacao: LocalDateTime.now()
+        ]
+        historiaService.update(novosValores, historia)
 
         return retorno
     }
