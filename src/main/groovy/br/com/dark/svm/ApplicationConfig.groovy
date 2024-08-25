@@ -1,5 +1,6 @@
 package br.com.dark.svm
 
+import br.com.dark.svm.media.Audio
 import grails.config.Config
 import grails.util.Holders
 
@@ -19,6 +20,14 @@ class ApplicationConfig {
 
     static String getRedditBaseImagePath() {
         return getConfig().getProperty("video.image.reddit", String)
+    }
+
+    static Audio getSwipe() {
+        new Audio(getVideoBasePath() + '/swipe.mp3')
+    }
+
+    static Audio getLastSwipe() {
+        new Audio(getVideoBasePath() + '/pausa.mp3')
     }
 
 }

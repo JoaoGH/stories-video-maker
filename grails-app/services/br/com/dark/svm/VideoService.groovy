@@ -65,8 +65,8 @@ class VideoService {
         conteudo.setVoz(Voice.PORTUGUESE_BR_MALE)
         conteudo.createAudioFileTTS(sessionId)
 
-        Audio swipe = new Audio(ApplicationConfig.getVideoBasePath() + "/swipe.mp3")
-        Audio pausa = new Audio(ApplicationConfig.getVideoBasePath() + "/pausa.mp3")
+        Audio swipe = ApplicationConfig.getSwipe()
+        Audio pausa = ApplicationConfig.getLastSwipe()
 
         Audio audioFinal = new Audio(path + "/audio_final.mp3")
         audioFinal.concat([swipe, titulo, swipe, conteudo, pausa])
