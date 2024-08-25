@@ -13,6 +13,15 @@ class DirectoryHelper {
         return Files.exists(Path.of(path))
     }
 
+    static Boolean folderExists(String dir) {
+        File folder = new File(dir)
+        return folder.exists() && folder.isDirectory()
+    }
+
+    static void createFolder(String path) {
+        new File(path).mkdir()
+    }
+
     static String getDirectoryFromPath(String path) {
         return new File(path.find(/.*(?<=\/)/)).absolutePath
     }

@@ -5,6 +5,7 @@ import br.com.dark.svm.enums.BackgroundVideoEnum
 import br.com.dark.svm.enums.HistoriaOrigemEnum
 import br.com.dark.svm.enums.HistoriaStatusEnum
 import br.com.dark.svm.exception.InvalidVideoException
+import br.com.dark.svm.helper.DirectoryHelper
 import br.com.dark.svm.media.Audio
 import br.com.dark.svm.media.Image
 import br.com.dark.svm.media.Video
@@ -30,6 +31,14 @@ class VideoService {
     }
 
     void createVideo(Historia historia, String videoBasePath, String sessionId, Boolean shorts) {
+        String path = ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}"
+
+        if (DirectoryHelper.folderExists(path)) {
+            throw new Exception("Pasta '$path' já criada, logo a produção da ${historia.toString()} já foi inicializada.")
+        }
+
+        DirectoryHelper.createFolder(path)
+
         Video videoBase = new Video(videoBasePath)
 
         if (!videoBase.fileAlreadyExists()) {
@@ -47,11 +56,6 @@ class VideoService {
         if (videoBase.hasSound()) {
             videoBase.removeSound()
         }
-
-        File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
-        dir.mkdir()
-
-        String path = dir.absolutePath
 
         Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
         titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
