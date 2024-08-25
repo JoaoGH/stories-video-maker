@@ -34,9 +34,9 @@ class Audio extends Media {
 
     void createAudioFileTTS(String sessionId) {
         File file = Paths.get(path).toFile()
-        TiktokTTS ttsTitulo = new TiktokTTS(sessionId, voz, conteudo, file)
+        TiktokTTS tts = new TiktokTTS(sessionId, voz, conteudo, file)
         log.info("Criar arquivo de audio '${path}'.")
-        ttsTitulo.createAudioFile()
+        tts.createAudioFile()
         this.duracao = getTempoDuracao()
     }
 
