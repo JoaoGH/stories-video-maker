@@ -3,15 +3,16 @@ package br.com.dark.svm
 class UrlMappings {
 
     static mappings = {
-        delete "/$controller/$id(.$format)?"(action:"delete")
-        get "/$controller(.$format)?"(action:"index")
-        get "/$controller/$id(.$format)?"(action:"show")
-        post "/$controller(.$format)?"(action:"save")
-        put "/$controller/$id(.$format)?"(action:"update")
-        patch "/$controller/$id(.$format)?"(action:"patch")
+        delete "/$controller/$id"(action: "delete")
+        get "/$controller"(action: "index")
+        get "/$controller/$id"(action: "show")
+        post "/$controller"(action: "save")
+        put "/$controller/$id"(action: "update")
 
-        "/"(controller: 'application', action:'index')
-        "500"(view: '/error')
-        "404"(view: '/notFound')
+        "/$controller/$action" {
+            constraints {
+                // apply constraints here
+            }
+        }
     }
 }
