@@ -30,7 +30,7 @@ class VideoService {
         createVideo(historia, videoBase, command.sessionId, command.shorts)
     }
 
-    void createVideo(Historia historia, String videoBasePath, String sessionId, Boolean shorts) {
+    void createVideo(Historia historia, String videoBasePath, String sessionId, Boolean makeShorts) {
         String path = ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}"
 
         if (DirectoryHelper.folderExists(path)) {
