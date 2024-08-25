@@ -23,6 +23,10 @@ abstract class Media {
         return path.find(/([^\/]+$)/)
     }
 
+    void delete() {
+        new File(path).delete()
+    }
+
     /**
      * Uma Closure que realiza a execução de uma string. <br/>
      * Pode receber uma string ou uma lista de strings (para argumentos com espaços). <br/>

@@ -8,6 +8,7 @@ import br.com.dark.svm.exception.InvalidVideoException
 import br.com.dark.svm.helper.DirectoryHelper
 import br.com.dark.svm.media.Audio
 import br.com.dark.svm.media.Image
+import br.com.dark.svm.media.Media
 import br.com.dark.svm.media.Video
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
@@ -119,6 +120,16 @@ class VideoService {
         historiaService.update([status: HistoriaStatusEnum.CRIADA.getValue(), dataHoraCriacao: LocalDateTime.now()], historia)
 
         log.info("Criação do video ${historia.toString()} finalizado.")
+
+        if (!makeShorts) {
+            log.info("Remover arquivos restantes.")
+            removeFiles([titulo, conteudo, audioFinal, image])
+        }
+
+    }
+
+    void removeFiles(List<Media> arquivosExtras) {
+        arquivosExtras*.delete()
     }
 
 }
