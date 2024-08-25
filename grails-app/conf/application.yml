@@ -34,6 +34,9 @@ spring:
                 - '*.properties'
 environments:
     development:
+        logback:
+            log:
+                location: './logs/'
         management:
             endpoints:
                 enabled-by-default: true
@@ -42,6 +45,9 @@ environments:
                     exposure:
                         include: '*'
     production:
+        logback:
+            log:
+                location: '${CATALINA_HOME}/logs/'
         management:
             endpoints:
                 enabled-by-default: false
@@ -81,6 +87,19 @@ grails:
         defaultScope: singleton
     converters:
         encoding: UTF-8
+---
+
+environments:
+    development:
+        logging:
+            file:
+                path: './logs'
+                name: '${info.app.name}'
+    production:
+        logging:
+            file:
+                path: '${catalina.base}/logs'
+                name: '${info.app.name}'
 
 ---
 hibernate:
@@ -99,6 +118,7 @@ environments:
     development:
         dataSource:
             dbCreate: create-drop
+            logSql: true
             url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
     test:
         dataSource:
