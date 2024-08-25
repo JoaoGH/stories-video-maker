@@ -19,6 +19,10 @@ abstract class Media {
         return DirectoryHelper.getDirectoryFromPath(path)
     }
 
+    String getFileName() {
+        return path.find(/([^\/]+$)/)
+    }
+
     /**
      * Uma Closure que realiza a execução de uma string. <br/>
      * Pode receber uma string ou uma lista de strings (para argumentos com espaços). <br/>

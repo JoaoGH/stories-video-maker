@@ -114,7 +114,7 @@ class Video extends Media {
     }
 
     void cut(Integer tempoInicial, Integer tempoFinal, String output = null) {
-        String outputFile = output ?: directory + '/temp-' + path.find(/([^\/]+$)/)
+        String outputFile = output ?: directory + '/temp-' + getFileName()
 
         log.info("Cortar video '${path}' ${tempoInicial}-${tempoFinal}${output ? " arquivo de saída " + output : ''}.")
 
