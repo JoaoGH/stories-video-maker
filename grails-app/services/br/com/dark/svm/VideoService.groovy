@@ -9,9 +9,12 @@ import br.com.dark.svm.helper.DirectoryHelper
 import br.com.dark.svm.media.Audio
 import br.com.dark.svm.media.Image
 import br.com.dark.svm.media.Media
+import br.com.dark.svm.media.Shorts
 import br.com.dark.svm.media.Video
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
+import javassist.NotFoundException
+
 import java.time.LocalDateTime
 
 @Transactional
@@ -152,6 +155,48 @@ class VideoService {
         Integer seconds = totalSeconds % 60;
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    Map makeShorts(Long id) {
+        Map retorno = [success: true]
+
+        Historia historia = historiaService.get(id)
+
+        if (!historia) {
+            throw new NotFoundException("Historia com ID ${id} não encontrada.")
+        }
+
+        log.info("Identificar arquivos necessários para criar os shorts.")
+
+        String path = ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}"
+        Video video = new Video(path + "/video.mp4")
+        Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
+        Audio conteudo = new Audio(path + "/conteudo.mp3", historia.conteudo)
+        Audio audioFinal = new Audio(path + "/audio_final.mp3")
+        Image image = new Image(path + '/image.png', historia)
+
+        List<Media> medias = [video, titulo, conteudo, audioFinal, image]
+
+        medias.each { Media it ->
+            if (!it.fileAlreadyExists()) {
+                throw new NotFoundException("Falha ao buscar arquivo ${it.path}.")
+            }
+        }
+
+        log.info("Arquivos identificados, inicializando criação de shorts.")
+
+        Shorts shorts = new Shorts(video, titulo, conteudo)
+        shorts.makeShortsByVideo()
+
+        log.info("Videos curtos criados com sucesso.")
+
+        medias.pop()
+        removeFiles(medias)
+
+        retorno.videos = shorts.videosCurtos.path
+        retorno.arquivosRemovidos = medias.path
+
+        return retorno
     }
 
 }
