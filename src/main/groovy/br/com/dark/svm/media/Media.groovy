@@ -1,9 +1,7 @@
 package br.com.dark.svm.media
 
+import br.com.dark.svm.helper.DirectoryHelper
 import groovy.util.logging.Slf4j
-
-import java.nio.file.Files
-import java.nio.file.Path
 
 @Slf4j
 abstract class Media {
@@ -14,11 +12,11 @@ abstract class Media {
     abstract protected BigDecimal getTempoDuracao()
 
     Boolean fileAlreadyExists() {
-        return Files.exists(Path.of(path))
+        return DirectoryHelper.fileExists(path)
     }
 
     String getDirectory() {
-        return new File(path.find(/.*(?<=\/)/)).absolutePath
+        return DirectoryHelper.getDirectoryFromPath(path)
     }
 
     /**
