@@ -1,5 +1,8 @@
 package br.com.dark.svm
 
+import br.com.dark.svm.command.VideoCommand
+import br.com.dark.svm.enums.BackgroundVideoEnum
+import br.com.dark.svm.enums.HistoriaOrigemEnum
 import br.com.dark.svm.enums.HistoriaStatusEnum
 import br.com.dark.svm.exception.InvalidVideoException
 import br.com.dark.svm.media.Audio
@@ -7,17 +10,27 @@ import br.com.dark.svm.media.Image
 import br.com.dark.svm.media.Video
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
-import grails.web.api.ServletAttributes
-
 import java.time.LocalDateTime
 
 @Transactional
-class VideoService implements ServletAttributes {
+class VideoService {
 
     HistoriaService historiaService
 
-    void createVideo(String videoName) {
-        Video videoBase = new Video(ApplicationConfig.getVideoBasePath() + "/" + videoName)
+    void createVideo(VideoCommand command) {
+        BackgroundVideoEnum backgroundVideo = BackgroundVideoEnum.value(command.background)
+        String videoBase = ApplicationConfig.getVideoBasePath() + "/" + backgroundVideo.videoName
+        Historia historia
+        if (command.id) {
+            historia = historiaService.get(command.id)
+        } else {
+            historia = historiaService.getNextHistoria(HistoriaOrigemEnum.value(command.origem))
+        }
+        createVideo(historia, videoBase, command.sessionId, command.shorts)
+    }
+
+    void createVideo(Historia historia, String videoBasePath, String sessionId, Boolean shorts) {
+        Video videoBase = new Video(videoBasePath)
 
         if (!videoBase.fileAlreadyExists()) {
             throw new InvalidVideoException("Sem arquivo de video para uso.")
@@ -35,13 +48,10 @@ class VideoService implements ServletAttributes {
             videoBase.removeSound()
         }
 
-        Historia historia = historiaService.getNextHistoria()
-
         File dir = new File(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
         dir.mkdir()
 
         String path = dir.absolutePath
-        String sessionId = getSessionId()
 
         Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
         titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
@@ -141,10 +151,6 @@ class VideoService implements ServletAttributes {
         new File(video.path).delete()
 
         return videos
-    }
-
-    String getSessionId() {
-        return params.sessionId
     }
 
     void deletarHistoria(String path) {

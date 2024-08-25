@@ -38,8 +38,9 @@ class HistoriaService {
         return historia
     }
 
-    Historia getNextHistoria() {
+    Historia getNextHistoria(HistoriaOrigemEnum origem) {
         List<Historia> historias = Historia.createCriteria().list {
+            eq('origem', origem.getValue())
             eq('status', HistoriaStatusEnum.OBTIDA.getValue())
         }
 
@@ -48,6 +49,10 @@ class HistoriaService {
         }
 
         return historias.get(0)
+    }
+
+    Historia get(Long id) {
+        return Historia.get(id)
     }
 
 }
