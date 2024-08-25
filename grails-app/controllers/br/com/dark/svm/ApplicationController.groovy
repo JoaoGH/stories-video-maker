@@ -1,4 +1,4 @@
-package stories.video.maker
+package br.com.dark.svm
 
 import grails.core.GrailsApplication
 import grails.plugins.*
