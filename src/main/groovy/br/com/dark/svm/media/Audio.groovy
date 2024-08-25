@@ -1,6 +1,8 @@
 package br.com.dark.svm.media
 
+import br.com.dark.svm.Historia
 import br.com.dark.svm.exception.InvalidAudioException
+import br.com.dark.svm.helper.DirectoryHelper
 import br.com.dark.svm.tts.TiktokTTS
 import br.com.dark.svm.tts.Voice
 import groovy.util.logging.Slf4j
@@ -16,6 +18,7 @@ class Audio extends Media {
 
     String conteudo
     Voice voz
+    Historia historia
 
     Audio(String path) {
         this.path = path
@@ -36,7 +39,13 @@ class Audio extends Media {
         File file = Paths.get(path).toFile()
         TiktokTTS tts = new TiktokTTS(sessionId, voz, conteudo, file)
         log.info("Criar arquivo de audio '${path}'.")
-        tts.createAudioFile()
+        try {
+            tts.createAudioFile()
+        } catch (Exception e) {
+            log.error("Erro ao criar arquivo de áudio para '${historia.toString()}'. Pasta será deletada.")
+            DirectoryHelper.deletarHistoria(directory)
+            throw e
+        }
         this.duracao = getTempoDuracao()
     }
 

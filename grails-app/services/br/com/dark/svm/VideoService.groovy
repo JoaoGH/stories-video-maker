@@ -55,23 +55,11 @@ class VideoService {
 
         Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
         titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
-        try {
-            titulo.createAudioFileTTS(sessionId)
-        } catch (Exception e) {
-            log.error("Erro ao criar arquivo de áudio para '${historia.toString()}'. Pasta será deletada.")
-            deletarHistoria(titulo.path)
-            throw e
-        }
+        titulo.createAudioFileTTS(sessionId)
 
         Audio conteudo = new Audio(path + "/conteudo.mp3", historia.conteudo)
         conteudo.setVoz(Voice.PORTUGUESE_BR_MALE)
-        try {
-            conteudo.createAudioFileTTS(sessionId)
-        } catch (Exception e) {
-            log.error("Erro ao criar arquivo de áudio para '${historia.toString()}'. Pasta será deletada.")
-            deletarHistoria(conteudo.path)
-            throw e
-        }
+        conteudo.createAudioFileTTS(sessionId)
 
         Audio swipe = new Audio(ApplicationConfig.getVideoBasePath() + "/swipe.mp3")
         Audio pausa = new Audio(ApplicationConfig.getVideoBasePath() + "/pausa.mp3")
