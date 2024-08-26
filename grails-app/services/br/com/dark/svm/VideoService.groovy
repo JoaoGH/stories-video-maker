@@ -88,9 +88,9 @@ class VideoService {
         }
 
         Audio swipe = ApplicationConfig.getSwipe()
-        Audio pausa = ApplicationConfig.getLastSwipe()
+        Audio lastSwipe = ApplicationConfig.getLastSwipe()
 
-        prepareScenario([videoBase], [swipe, pausa])
+        prepareScenario([videoBase], [swipe, lastSwipe])
 
         Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
         titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
@@ -101,7 +101,7 @@ class VideoService {
         conteudo.createAudioFileTTS(sessionId)
 
         Audio audioFinal = new Audio(path + "/audio_final.mp3")
-        audioFinal.concat([swipe, titulo, swipe, conteudo, pausa])
+        audioFinal.concat([swipe, titulo, swipe, conteudo, lastSwipe])
 
         BigDecimal tamanhoFinal = audioFinal.getDuracao()
 
