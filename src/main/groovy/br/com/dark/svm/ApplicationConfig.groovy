@@ -23,11 +23,19 @@ class ApplicationConfig {
     }
 
     static Audio getSwipe() {
-        new Audio(getVideoBasePath() + '/swipe.mp3')
+        Audio swipe = new Audio(getConfig().getProperty('video.audio.swipe', String))
+        if (swipe.fileAlreadyExists()) {
+            return swipe
+        }
+        return new Audio('./src/main/resources/swipe.png')
     }
 
     static Audio getLastSwipe() {
-        new Audio(getVideoBasePath() + '/pausa.mp3')
+        Audio lastSwipe = new Audio(getConfig().getProperty('video.audio.last-swipe', String))
+        if (lastSwipe.fileAlreadyExists()) {
+            return lastSwipe
+        }
+        return new Audio('./src/main/resources/last_swipe.mp3')
     }
 
 }
