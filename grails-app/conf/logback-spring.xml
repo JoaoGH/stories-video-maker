@@ -24,7 +24,7 @@
         </encoder>
     </appender>
 
-    <logger name="br.com.insoft4" additivity="false" level="info">
+    <logger name="br.com.dark.svm" additivity="false" level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="ROLLINGFILE" />
     </logger>
