@@ -152,4 +152,4 @@ video:
     base:
         path: '${user.home}/Videos/${info.app.name}'
     image:
-        reddit: "./src/main/resources/reddit_base.png"
+        reddit: "${user.home}/Videos/${info.app.name}/reddit_base.png"
