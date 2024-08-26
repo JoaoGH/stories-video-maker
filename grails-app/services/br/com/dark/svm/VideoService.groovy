@@ -55,15 +55,34 @@ class VideoService {
     }
 
     Map createVideo(VideoCommand command) {
+        Map retorno = [success: true]
+
         BackgroundVideoEnum backgroundVideo = BackgroundVideoEnum.value(command.background)
         String videoBase = ApplicationConfig.getVideoBasePath() + "/" + backgroundVideo.videoName
-        Historia historia
+
         if (command.id) {
-            historia = historiaService.get(command.id)
-        } else {
-            historia = historiaService.getNextHistoria(HistoriaOrigemEnum.value(command.origem))
+            Historia historia = historiaService.get(command.id)
+            return createVideo(historia, videoBase, command.sessionId, command.shorts)
         }
-        return createVideo(historia, videoBase, command.sessionId, command.shorts)
+
+        List<Historia> historias = historiaService.list([status: HistoriaStatusEnum.OBTIDA.getValue()])
+
+        retorno.data = []
+        for (Historia historia : historias) {
+            try {
+                Map video = createVideo(historia, videoBase, command.sessionId, command.shorts)
+                retorno.data << video
+            } catch (Exception e) {
+                log.error("Erro ao criar video para ${historia.toString()}. Passando para próxima execução.", e)
+                retorno.data << [
+                        success: false,
+                        message: "Erro ao criar video para ${historia.toString()}."
+                ]
+                DirectoryHelper.deletarHistoria(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
+            }
+        }
+
+        return retorno
     }
 
     Map createVideo(Historia historia, String videoBasePath, String sessionId, Boolean makeShorts) {
