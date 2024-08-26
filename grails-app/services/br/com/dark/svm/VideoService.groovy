@@ -108,6 +108,7 @@ class VideoService {
         if (tamanhoVideoBase < tamanhoFinal) {
             retorno.success = false
             retorno.message = "Video base com ${formatTime(tamanhoVideoBase.toInteger())} insuficiente para ${formatTime(tamanhoFinal.toInteger())}"
+            DirectoryHelper.deletarHistoria(path)
             return retorno
         }
 
