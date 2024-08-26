@@ -12,7 +12,15 @@ import java.time.LocalDateTime
 class HistoriaService {
 
     List<Historia> list() {
-        List<Historia> retorno = Historia.createCriteria().list {}
+        return list([:])
+    }
+
+    List<Historia> list(Map filters) {
+        List<Historia> retorno = Historia.createCriteria().list {
+            if (filters?.status) {
+                eq('status', filters.status)
+            }
+        }
 
         return retorno
     }
