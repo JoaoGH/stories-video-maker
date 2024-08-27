@@ -147,11 +147,8 @@ class VideoService {
         video.addImage(image, tempoTitulo)
 
         log.info("Atualizar ${historia.toString()}.")
-        Map novosValores = [
-                status         : !makeShorts ? HistoriaStatusEnum.CRIADA.getValue() : historia.status,
-                dataHoraCriacao: LocalDateTime.now()
-        ]
-        historiaService.update(novosValores, historia)
+        HistoriaStatusEnum status = !makeShorts ? HistoriaStatusEnum.CRIADA : HistoriaStatusEnum.value(historia.status)
+        historiaService.updateStatus(historia, status)
 
         log.info("Criação do video ${historia.toString()} finalizado.")
 
@@ -168,6 +165,7 @@ class VideoService {
         if (tamanhoFinal <= ApplicationConfig.getLimitSizeShort()) {
             retorno.message = "Não é necessário criar shorts para a ${historia.toString()}. É necessário adicionar legendas em 'https://www.capcut.com/'."
             removeFiles([titulo, conteudo, audioFinal, image])
+            historiaService.updateStatus(historia, HistoriaStatusEnum.CRIADA)
             return retorno
         }
 
@@ -210,6 +208,7 @@ class VideoService {
             retorno.success = false
             retorno.message = "Não é necessário criar shorts para a ${historia.toString()}."
             removeFiles([titulo, conteudo, audioFinal, image])
+            historiaService.updateStatus(historia, HistoriaStatusEnum.CRIADA)
             return retorno
         }
 
@@ -235,11 +234,7 @@ class VideoService {
         retorno.arquivosRemovidos = medias.path
 
         log.info("Atualizar ${historia.toString()}.")
-        Map novosValores = [
-                status         : HistoriaStatusEnum.CRIADA.getValue(),
-                dataHoraCriacao: LocalDateTime.now()
-        ]
-        historiaService.update(novosValores, historia)
+        historiaService.updateStatus(historia, HistoriaStatusEnum.CRIADA)
 
         return retorno
     }

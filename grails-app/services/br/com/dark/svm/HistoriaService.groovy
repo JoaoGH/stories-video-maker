@@ -63,4 +63,15 @@ class HistoriaService {
         return Historia.get(id)
     }
 
+    Historia updateStatus(Historia historia, HistoriaStatusEnum status) {
+        Map data = [
+                status: status.getValue()
+        ]
+        switch (status) {
+            case HistoriaStatusEnum.CRIADA:
+                data.dataHoraCriacao = LocalDateTime.now()
+        }
+        update(data, historia)
+    }
+
 }
