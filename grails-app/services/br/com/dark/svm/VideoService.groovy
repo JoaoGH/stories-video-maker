@@ -206,6 +206,13 @@ class VideoService {
         Audio audioFinal = new Audio(path + "/audio_final.mp3")
         Image image = new Image(path + '/image.png', historia)
 
+        if (video.duracao <= ApplicationConfig.getLimitSizeShort()) {
+            retorno.success = false
+            retorno.message = "Não é necessário criar shorts para a ${historia.toString()}."
+            removeFiles([titulo, conteudo, audioFinal, image])
+            return retorno
+        }
+
         List<Media> medias = [video, titulo, conteudo, audioFinal, image]
 
         medias.each { Media it ->
