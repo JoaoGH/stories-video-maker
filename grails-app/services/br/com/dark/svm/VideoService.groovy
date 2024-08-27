@@ -157,6 +157,7 @@ class VideoService {
 
         retorno.historia = historia.toString()
         retorno.path = video.path
+        retorno.duracao = formatTime(tamanhoFinal.toInteger())
 
         if (!makeShorts) {
             log.info("Remover arquivos restantes.")
