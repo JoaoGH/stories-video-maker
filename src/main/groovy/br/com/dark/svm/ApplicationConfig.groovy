@@ -38,4 +38,8 @@ class ApplicationConfig {
         return new Audio('./src/main/resources/last_swipe.mp3')
     }
 
+    static Integer getLimitSizeShort() {
+        return 55
+    }
+
 }

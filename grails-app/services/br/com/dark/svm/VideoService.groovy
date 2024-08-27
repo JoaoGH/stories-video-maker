@@ -165,6 +165,12 @@ class VideoService {
             return retorno
         }
 
+        if (tamanhoFinal <= ApplicationConfig.getLimitSizeShort()) {
+            retorno.message = "Não é necessário criar shorts para a ${historia.toString()}. É necessário adicionar legendas em 'https://www.capcut.com/'."
+            removeFiles([titulo, conteudo, audioFinal, image])
+            return retorno
+        }
+
         retorno.message = "Necessário adicionar legendas em 'https://www.capcut.com/' antes de criar os shorts."
 
         return retorno
