@@ -1,12 +1,14 @@
 package br.com.dark.svm.helper
 
+import org.apache.commons.io.FileUtils
+
 import java.nio.file.Files
 import java.nio.file.Path
 
 class DirectoryHelper {
 
     static void deletarHistoria(String path) {
-        new File(path).delete()
+        FileUtils.deleteDirectory(new File(path))
     }
 
     static Boolean fileExists(String path) {

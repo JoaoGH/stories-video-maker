@@ -45,7 +45,7 @@ class Video extends Media {
 
     void crop() {
         int vertical = 656
-        String outputFile = directory + '/temp-' + path.find(/([^\/]+$)/)
+        String outputFile = directory + '/temp-' + getFileName()
         log.info("Crop do vídeo '${path}' para o formato veritical 9:16.")
 
         StringBuilder command = new StringBuilder()
@@ -82,7 +82,7 @@ class Video extends Media {
     }
 
     void removeSound() {
-        String outputFile = directory + '/temp-' + path.find(/([^\/]+$)/)
+        String outputFile = directory + '/temp-' + getFileName()
 
         log.info("Remover áudio do vídeo '${path}'.")
 
@@ -114,7 +114,7 @@ class Video extends Media {
     }
 
     void cut(Integer tempoInicial, Integer tempoFinal, String output = null) {
-        String outputFile = output ?: directory + '/temp-' + path.find(/([^\/]+$)/)
+        String outputFile = output ?: directory + '/temp-' + getFileName()
 
         log.info("Cortar video '${path}' ${tempoInicial}-${tempoFinal}${output ? " arquivo de saída " + output : ''}.")
 
@@ -134,7 +134,7 @@ class Video extends Media {
     }
 
     void addAudio() {
-        String outputFile = directory + '/temp-' + path.find(/([^\/]+$)/)
+        String outputFile = directory + '/temp-' + getFileName()
         log.info("Adicionar áudio '${audio.path}' no vídeo '${path}'.")
 
         StringBuilder command = new StringBuilder()
@@ -151,7 +151,7 @@ class Video extends Media {
     }
 
     void addImage(Image image, BigDecimal duracao) {
-        String outputFile = directory + '/temp-' + path.find(/([^\/]+$)/)
+        String outputFile = directory + '/temp-' + getFileName()
 
         log.info("Adicionar imagem '${image.path}' no vídeo '${path}'.")
 

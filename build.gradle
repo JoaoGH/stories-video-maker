@@ -11,7 +11,7 @@ buildscript {
 }
 
 version "0.1"
-group "stories.video.maker"
+group "br.com.darl.svm"
 
 apply plugin: "eclipse"
 apply plugin: "idea"

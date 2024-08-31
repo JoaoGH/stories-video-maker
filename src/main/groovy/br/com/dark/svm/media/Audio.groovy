@@ -87,4 +87,20 @@ class Audio extends Media {
         this.duracao = getTempoDuracao()
     }
 
+    void encode() {
+        String tempFile = directory + '/temp-' + getFileName()
+
+        StringBuilder command = new StringBuilder()
+        command << "ffmpeg"
+        command << " -i ${path}"
+        command << " -ar 24000"
+        command << " -ac 1"
+        command << " -b:a 128k ${tempFile}"
+        runCommand(command.toString())
+
+        log.info("Deletar arquivo temporário '${tempFile}'.")
+        new File(path).delete()
+        new File(tempFile).renameTo(path)
+    }
+
 }

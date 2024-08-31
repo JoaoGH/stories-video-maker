@@ -152,4 +152,7 @@ video:
     base:
         path: '${user.home}/Videos/${info.app.name}'
     image:
-        reddit: "./src/main/resources/reddit_base.png"
+        reddit: "${user.home}/Videos/${info.app.name}/reddit_base.png"
+    audio:
+        swipe: '${user.home}/Videos/${info.app.name}/swipe.mp3'
+        last-swipe: '${user.home}/Videos/${info.app.name}/last_swipe.mp3'
