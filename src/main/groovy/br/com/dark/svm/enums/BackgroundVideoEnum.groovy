@@ -2,7 +2,7 @@ package br.com.dark.svm.enums
 
 enum BackgroundVideoEnum {
 
-    MINECRAFT("M", "minecraft.mp4")
+    MINECRAFT("M", "base_videos/minecraft.mp4")
 
     private String value
     private String videoName
