@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "7342a4eb-fefa-45ac-a45d-9fb66d4d5338",
+		"name": "Stories Video Maker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8395671"
+	},
+	"item": [
+		{
+			"name": "AITA",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/reddit",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"reddit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Reddit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/reddit",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"reddit"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prepare",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{url}}/video/prepareScenario",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"video",
+						"prepareScenario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "sessionId",
+							"value": "{{sessionIdTiktok}}",
+							"type": "text"
+						},
+						{
+							"key": "origem",
+							"value": "AITA",
+							"type": "text"
+						},
+						{
+							"key": "shorts",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "background",
+							"value": "M",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/video/create",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"video",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Many",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "sessionId",
+							"value": "{{sessionIdTiktok}}",
+							"type": "text"
+						},
+						{
+							"key": "origem",
+							"value": "AITA",
+							"type": "text"
+						},
+						{
+							"key": "shorts",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "background",
+							"value": "M",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/video/create",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"video",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "makeShort",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/video/makeShorts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"video",
+						"makeShorts"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:8080/stories-video-maker/",
+			"type": "string"
+		},
+		{
+			"key": "sessionIdTiktok",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
