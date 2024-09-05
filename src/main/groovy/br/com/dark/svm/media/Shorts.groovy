@@ -77,7 +77,10 @@ class Shorts extends Media {
         Integer tempoInicial = 0
         listaTempo.eachWithIndex { Integer tempo, Integer i ->
             Video videoCurto = new Video(directory + "/${i + 1}_" + video.getFileName())
-            Integer tempoFinal = listaTempo.subList(0, i + 1).sum() as Integer
+            Integer tempoFinal = listaTempo.subList(0, i + 1).first()
+            if (i > 0) {
+                tempoFinal += 2
+            }
             video.cut(tempoInicial, tempoFinal, videoCurto.path)
             videosCurtos.add(videoCurto)
             log.info("Arquivo '${videoCurto.path}' criado com sucesso (${i+1}/${listaTempo.size()}).")
