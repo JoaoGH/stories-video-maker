@@ -110,12 +110,12 @@ class VideoService {
 
         BigDecimal tamanhoFinal = audioFinal.getDuracao()
 
-        Video videoBase = videoSingleton.getNextVideo(backgroundVideo, tamanhoFinal)
-
         if (!videoSingleton.hasVideos()) {
             DirectoryHelper.deletarHistoria(path)
             throw new InvalidVideoException("Sem arquivo de video para uso.")
         }
+
+        Video videoBase = videoSingleton.getNextVideo(backgroundVideo, tamanhoFinal)
 
         BigDecimal tamanhoVideoBase = videoBase.duracao
         if (!tamanhoVideoBase) {
