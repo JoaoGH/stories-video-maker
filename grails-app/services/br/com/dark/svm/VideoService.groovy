@@ -97,8 +97,6 @@ class VideoService {
         Audio swipe = ApplicationConfig.getSwipe()
         Audio lastSwipe = ApplicationConfig.getLastSwipe()
 
-        prepareScenario([videoBase], [swipe, lastSwipe])
-
         Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
         titulo.setVoz(Voice.PORTUGUESE_BR_MALE)
         titulo.createAudioFileTTS(sessionId)
