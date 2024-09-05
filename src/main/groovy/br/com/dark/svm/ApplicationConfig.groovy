@@ -42,4 +42,8 @@ class ApplicationConfig {
         return 55
     }
 
+    static Integer getLimitForBaseVideo() {
+        return 10 * 60
+    }
+
 }
