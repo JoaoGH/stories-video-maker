@@ -26,7 +26,7 @@ class VideoSingleton {
                     if (!video.isVertical()) {
                         video.crop()
                     }
-                    if (video.duracao > ApplicationConfig.getLimiteForBaseVideo() + 1) {
+                    if (video.duracao > ApplicationConfig.getLimitForBaseVideo() + 1) {
                         List<Video> abc = splitVideo(video)
                         videos.addAll(abc)
                     }
@@ -54,7 +54,7 @@ class VideoSingleton {
 
     protected static List<Video> splitVideo(Video base) {
         List<Video> novos = []
-        Integer limite = ApplicationConfig.getLimiteForBaseVideo()
+        Integer limite = ApplicationConfig.getLimitForBaseVideo()
 
         while (base.duracao > limite) {
             Video novoVideo = new Video(base.directory + "/" + UUID.randomUUID().toString() + ".mp4")
