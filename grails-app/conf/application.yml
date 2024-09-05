@@ -153,6 +153,7 @@ environments:
 video:
     base:
         path: '${user.home}/Videos/${info.app.name}'
+        limit-time: 600
     image:
         reddit: "${user.home}/Videos/${info.app.name}/reddit_base.png"
     audio:

@@ -43,7 +43,7 @@ class ApplicationConfig {
     }
 
     static Integer getLimitForBaseVideo() {
-        return 10 * 60
+        return getConfig().getProperty("video.base.limit-time", Integer, 600)
     }
 
 }
