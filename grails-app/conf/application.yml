@@ -32,6 +32,8 @@ spring:
                 - '**/*.gson'
                 - 'logback.groovy'
                 - '*.properties'
+    config:
+        import: 'optional:file:${user.home}/.grails/${info.app.name}-config/application.yml,optional:file:${app.base.config.directory}/${info.app.name}-config/application.yml'
 environments:
     development:
         logback:
