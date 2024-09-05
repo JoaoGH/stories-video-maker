@@ -16,6 +16,9 @@ class VideoSingleton {
             String base = ApplicationConfig.getVideoBasePath()
             for (BackgroundVideoEnum it : BackgroundVideoEnum.values()) {
                 String diretorio = "$base/base_videos/${it.folder}".toString()
+                if (!DirectoryHelper.folderExists(diretorio)) {
+                    DirectoryHelper.createFolder(diretorio)
+                }
                 List<File> arquivosDeVideo = DirectoryHelper.getFilesFromDirectory(diretorio)
                 List<Video> videos = []
                 for (File videoBase : arquivosDeVideo) {
