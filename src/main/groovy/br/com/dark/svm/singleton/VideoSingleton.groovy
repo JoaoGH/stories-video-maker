@@ -13,30 +13,7 @@ class VideoSingleton {
     static VideoSingleton getInstance() {
         if (instance == null) {
             instance = new VideoSingleton()
-            String base = ApplicationConfig.getVideoBasePath()
-            for (BackgroundVideoEnum it : BackgroundVideoEnum.values()) {
-                String diretorio = "$base/base_videos/${it.folder}".toString()
-                if (!DirectoryHelper.folderExists(diretorio)) {
-                    DirectoryHelper.createFolder(diretorio)
-                }
-                List<File> arquivosDeVideo = DirectoryHelper.getFilesFromDirectory(diretorio)
-                List<Video> videos = []
-                for (File videoBase : arquivosDeVideo) {
-                    Video video = new Video(videoBase.absolutePath)
-                    if (video.hasSound()) {
-                        video.removeSound()
-                    }
-                    if (!video.isVertical()) {
-                        video.crop()
-                    }
-                    if (video.duracao > ApplicationConfig.getLimitForBaseVideo() + 1) {
-                        List<Video> abc = splitVideo(video)
-                        videos.addAll(abc)
-                    }
-                    videos.add(video)
-                }
-                instance.videosBase[it] = videos.sort { Video v -> v.duracao }
-            }
+            prepareVideos()
         }
 
         return instance
@@ -72,6 +49,33 @@ class VideoSingleton {
 
     Boolean hasVideos() {
         return videosBase && videosBase.values().flatten().size() > 0
+    }
+
+    static void prepareVideos() {
+        String base = ApplicationConfig.getVideoBasePath()
+        for (BackgroundVideoEnum it : BackgroundVideoEnum.values()) {
+            String diretorio = "$base/base_videos/${it.folder}".toString()
+            if (!DirectoryHelper.folderExists(diretorio)) {
+                DirectoryHelper.createFolder(diretorio)
+            }
+            List<File> arquivosDeVideo = DirectoryHelper.getFilesFromDirectory(diretorio)
+            List<Video> videos = []
+            for (File videoBase : arquivosDeVideo) {
+                Video video = new Video(videoBase.absolutePath)
+                if (video.hasSound()) {
+                    video.removeSound()
+                }
+                if (!video.isVertical()) {
+                    video.crop()
+                }
+                if (video.duracao > ApplicationConfig.getLimitForBaseVideo() + 1) {
+                    List<Video> abc = splitVideo(video)
+                    videos.addAll(abc)
+                }
+                videos.add(video)
+            }
+            instance.videosBase[it] = videos.sort { Video v -> v.duracao }
+        }
     }
 
 }
