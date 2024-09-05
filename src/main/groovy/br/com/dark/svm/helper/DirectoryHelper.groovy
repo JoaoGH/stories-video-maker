@@ -28,4 +28,12 @@ class DirectoryHelper {
         return new File(path.find(/.*(?<=\/)/)).absolutePath
     }
 
+    static List<File> getFilesFromDirectory(String directory) {
+        File dir = new File(directory)
+        List<File> files = dir.listFiles().findAll { file ->
+            file.isFile()
+        }
+        return files
+    }
+
 }
