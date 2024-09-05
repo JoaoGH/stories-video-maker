@@ -43,6 +43,10 @@ class Video extends Media {
         return retorno
     }
 
+    void updateDuracao() {
+        this.duracao = getTempoDuracao()
+    }
+
     void crop() {
         int vertical = 656
         String outputFile = directory + '/temp-' + getFileName()
@@ -130,6 +134,7 @@ class Video extends Media {
             log.info("Deletar arquivo temporário '${outputFile}'.")
             new File(path).delete()
             new File(outputFile).renameTo(path)
+            this.updateDuracao()
         }
     }
 
