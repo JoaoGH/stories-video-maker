@@ -9,6 +9,10 @@ class Image extends Media {
 
     Historia historia
 
+    Image(String path) {
+        this.path = path
+    }
+
     Image(String path, Historia historia) {
         this.path = path
         this.historia = historia
