@@ -29,7 +29,7 @@ class Image extends Media {
         log.info("Criar imagem '${path}'.")
         StringBuilder imagem = new StringBuilder()
         imagem.append("python3 src/main/python/br/com/dark/svm/create_image.py")
-        imagem.append(" ${ApplicationConfig.getRedditBaseImagePath()}")
+        imagem.append(" ${ApplicationConfig.getRedditBaseImagePath().path}")
         imagem.append(" ${path}")
         imagem.append(" ${titulo}")
         imagem.append(" /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
