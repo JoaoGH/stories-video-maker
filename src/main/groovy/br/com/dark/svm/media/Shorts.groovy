@@ -18,7 +18,7 @@ class Shorts extends Media {
         this.video = video
         this.titulo = titulo
         this.conteudo = conteudo
-        this.duracao = getTempoDuracao()
+        this.duracao = video.duracao ?: getTempoDuracao()
         this.videosCurtos = []
     }
 
