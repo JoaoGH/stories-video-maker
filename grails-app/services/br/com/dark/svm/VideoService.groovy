@@ -2,7 +2,6 @@ package br.com.dark.svm
 
 import br.com.dark.svm.command.VideoCommand
 import br.com.dark.svm.enums.BackgroundVideoEnum
-import br.com.dark.svm.enums.HistoriaOrigemEnum
 import br.com.dark.svm.enums.HistoriaStatusEnum
 import br.com.dark.svm.exception.InvalidVideoException
 import br.com.dark.svm.helper.DirectoryHelper
@@ -16,43 +15,11 @@ import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
 import javassist.NotFoundException
 
-import java.time.LocalDateTime
-
 @Transactional
 class VideoService {
 
     HistoriaService historiaService
     VideoSingleton videoSingleton = VideoSingleton.getInstance()
-
-    Map prepareScenario() {
-        List<Video> videos = videoSingleton.getAllVideos()
-        List<Audio> audios = [ApplicationConfig.getSwipe(), ApplicationConfig.getLastSwipe()]
-
-        prepareScenario(videos, audios)
-    }
-
-    Map prepareScenario(List<Video> videos, List<Audio> audios) {
-        Map retorno = [sucess: true, videos: [], audios: []]
-
-        videos.each { Video video ->
-            if (!video.isVertical()) {
-                video.crop()
-            }
-
-            if (video.hasSound()) {
-                video.removeSound()
-            }
-
-            retorno.videos << video.path
-        }
-
-        audios.each { Audio it ->
-            it.encode()
-            retorno.audios << it.path
-        }
-
-        return retorno
-    }
 
     Map createVideo(VideoCommand command) {
         Map retorno = [success: true]
