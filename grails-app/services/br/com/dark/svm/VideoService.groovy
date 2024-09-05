@@ -199,10 +199,10 @@ class VideoService {
 
         String path = ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}"
         Video video = new Video(path + "/video.mp4")
-        Audio titulo = new Audio(path + "/titulo.mp3", historia.titulo)
-        Audio conteudo = new Audio(path + "/conteudo.mp3", historia.conteudo)
+        Audio titulo = new Audio(path + "/titulo.mp3")
+        Audio conteudo = new Audio(path + "/conteudo.mp3")
         Audio audioFinal = new Audio(path + "/audio_final.mp3")
-        Image image = new Image(path + '/image.png', historia)
+        Image image = new Image(path + '/image.png')
 
         if (video.duracao <= ApplicationConfig.getLimitSizeShort()) {
             retorno.success = false
