@@ -11,6 +11,7 @@ import br.com.dark.svm.media.Image
 import br.com.dark.svm.media.Media
 import br.com.dark.svm.media.Shorts
 import br.com.dark.svm.media.Video
+import br.com.dark.svm.singleton.VideoSingleton
 import br.com.dark.svm.tts.Voice
 import grails.gorm.transactions.Transactional
 import javassist.NotFoundException
@@ -21,11 +22,10 @@ import java.time.LocalDateTime
 class VideoService {
 
     HistoriaService historiaService
+    VideoSingleton videoSingleton = VideoSingleton.getInstance()
 
     Map prepareScenario() {
-        List<String> nomeVideos = BackgroundVideoEnum.values()*.videoName
-        String base = ApplicationConfig.getVideoBasePath()
-        List<Video> videos = nomeVideos.collect { String it -> new Video("${base}/${it}") }
+        List<Video> videos = videoSingleton.getAllVideos()
         List<Audio> audios = [ApplicationConfig.getSwipe(), ApplicationConfig.getLastSwipe()]
 
         prepareScenario(videos, audios)

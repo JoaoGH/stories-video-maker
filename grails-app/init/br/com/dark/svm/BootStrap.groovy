@@ -5,8 +5,11 @@ import grails.converters.JSON
 
 class BootStrap {
 
+    VideoService videoService
+
     def init = { servletContext ->
         configureMashallers()
+        videoService.prepareScenario()
     }
     def destroy = {
     }
