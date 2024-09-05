@@ -197,7 +197,7 @@ class VideoService {
 
         log.info("Identificar arquivos necessários para criar os shorts.")
 
-        String path = ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}"
+        String path = ApplicationConfig.getVideoBasePath() + "/${historia.origem.toLowerCase()}/historia_${historia.id}"
         Video video = new Video(path + "/video.mp4")
         Audio titulo = new Audio(path + "/titulo.mp3")
         Audio conteudo = new Audio(path + "/conteudo.mp3")
