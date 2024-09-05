@@ -58,11 +58,10 @@ class VideoService {
         Map retorno = [success: true]
 
         BackgroundVideoEnum backgroundVideo = BackgroundVideoEnum.value(command.background)
-        String videoBase = ApplicationConfig.getVideoBasePath() + "/" + backgroundVideo.videoName
 
         if (command.id) {
             Historia historia = historiaService.get(command.id)
-            return createVideo(historia, videoBase, command.sessionId, command.shorts)
+            return createVideo(historia, backgroundVideo, command.sessionId, command.shorts)
         }
 
         List<Historia> historias = historiaService.list([status: HistoriaStatusEnum.OBTIDA.getValue()])
@@ -70,7 +69,7 @@ class VideoService {
         retorno.data = []
         for (Historia historia : historias) {
             try {
-                Map video = createVideo(historia, videoBase, command.sessionId, command.shorts)
+                Map video = createVideo(historia, backgroundVideo, command.sessionId, command.shorts)
                 retorno.data << video
             } catch (Exception e) {
                 log.error("Erro ao criar video para ${historia.toString()}. Passando para próxima execução.", e)
@@ -85,26 +84,15 @@ class VideoService {
         return retorno
     }
 
-    Map createVideo(Historia historia, String videoBasePath, String sessionId, Boolean makeShorts) {
+    Map createVideo(Historia historia, BackgroundVideoEnum backgroundVideo, String sessionId, Boolean makeShorts) {
         Map retorno = [success: true]
-        String path = ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}"
+        String path = ApplicationConfig.getVideoBasePath() + "/${historia.origem.toLowerCase()}/historia_${historia.id}"
 
         if (DirectoryHelper.folderExists(path)) {
             throw new Exception("Pasta '$path' já criada, logo a produção da ${historia.toString()} já foi inicializada.")
         }
 
         DirectoryHelper.createFolder(path)
-
-        Video videoBase = new Video(videoBasePath)
-
-        if (!videoBase.fileAlreadyExists()) {
-            throw new InvalidVideoException("Sem arquivo de video para uso.")
-        }
-
-        BigDecimal tamanhoVideoBase = videoBase.duracao
-        if (!tamanhoVideoBase) {
-            throw new InvalidVideoException("Video sem tempo para uso.")
-        }
 
         Audio swipe = ApplicationConfig.getSwipe()
         Audio lastSwipe = ApplicationConfig.getLastSwipe()
@@ -123,6 +111,19 @@ class VideoService {
         audioFinal.concat([swipe, titulo, swipe, conteudo, lastSwipe])
 
         BigDecimal tamanhoFinal = audioFinal.getDuracao()
+
+        Video videoBase = videoSingleton.getNextVideo(backgroundVideo, tamanhoFinal)
+
+        if (!videoSingleton.hasVideos()) {
+            DirectoryHelper.deletarHistoria(path)
+            throw new InvalidVideoException("Sem arquivo de video para uso.")
+        }
+
+        BigDecimal tamanhoVideoBase = videoBase.duracao
+        if (!tamanhoVideoBase) {
+            DirectoryHelper.deletarHistoria(path)
+            throw new InvalidVideoException("Video sem tempo para uso.")
+        }
 
         if (tamanhoVideoBase < tamanhoFinal) {
             retorno.success = false
