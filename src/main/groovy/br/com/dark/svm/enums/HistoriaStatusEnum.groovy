@@ -3,6 +3,7 @@ package br.com.dark.svm.enums
 enum HistoriaStatusEnum {
 
     OBTIDA("O"),
+    GERANDO("C"),
     CRIADA("C"),
     POSTADA("P")
 
@@ -20,6 +21,8 @@ enum HistoriaStatusEnum {
         switch (value) {
             case "O":
                 return OBTIDA
+            case "G":
+                return GERANDO
             case "C":
                 return CRIADA
             case "P":
