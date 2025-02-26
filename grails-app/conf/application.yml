@@ -112,16 +112,16 @@ hibernate:
 dataSource:
     pooled: true
     jmxExport: true
-    driverClassName: org.h2.Driver
+    driver-class-name: org.postgresql.Driver
     username: sa
     password: ''
 
 environments:
     development:
         dataSource:
-            dbCreate: create-drop
-            logSql: true
-            url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+            url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/svm}
+            username: ${DATASOURCE_USER:postgres}
+            password: ${DATASOURCE_PASS:postgres}
     test:
         dataSource:
             dbCreate: update
