@@ -27,6 +27,7 @@ class HistoriaService {
 
     Historia save(Map data, HistoriaOrigemEnum origem) {
         Historia record = new Historia()
+        record.setAutor(data.get('author').toString().toLowerCase())
         record.setTitulo(TextHelper.removerEmoji(data.title.toString()))
         record.setConteudo(TextHelper.removerEmoji(data.selftext.toString()))
         record.setOrigem(origem.getValue())

@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 class Historia {
 
     UUID id
+    String autor
     String titulo
     String conteudo
     String origem
