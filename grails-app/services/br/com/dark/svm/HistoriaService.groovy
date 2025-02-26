@@ -35,9 +35,17 @@ class HistoriaService {
         record.setStatus(HistoriaStatusEnum.OBTIDA.getValue())
         record.setDataCadastro(LocalDateTime.now())
 
+        if (!isUnique(record)) {
+            return null
+        }
+
         record.save(flush: true, failOnError: true)
 
         return record
+    }
+
+    boolean isUnique(Historia bean) {
+        return Historia.countByAutorAndOrigem(bean.autor, bean.origem) == 0
     }
 
     Historia update(Map parameters, Historia historia) {
