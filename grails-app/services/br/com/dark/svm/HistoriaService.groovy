@@ -32,7 +32,7 @@ class HistoriaService {
         record.setOrigem(origem.getValue())
         record.setIdioma(new Locale("pt", "BR"))
         record.setStatus(HistoriaStatusEnum.OBTIDA.getValue())
-        record.setDataHoraBusca(LocalDateTime.now())
+        record.setDataCadastro(LocalDateTime.now())
 
         record.save(flush: true, failOnError: true)
 

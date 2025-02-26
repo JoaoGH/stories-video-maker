@@ -4,18 +4,18 @@ import java.time.LocalDateTime
 
 class Historia {
 
-    Long id
+    UUID id
     String titulo
     String conteudo
     String origem
     Locale idioma
     String status
-    LocalDateTime dataHoraBusca
-    LocalDateTime dataHoraCriacao
+    LocalDateTime dataCadastro
+    LocalDateTime dataAtualizacao
 
     static mapping = {
         table 'historias'
-        id generator: 'sequence'
+        id generator: 'uuid2', type: 'pg-uuid'
 
         conteudo type: 'text'
 
@@ -25,7 +25,7 @@ class Historia {
 
     static constraints = {
         status maxSize: 1
-        dataHoraCriacao nullable: true
+        dataAtualizacao nullable: true
     }
 
     @Override
