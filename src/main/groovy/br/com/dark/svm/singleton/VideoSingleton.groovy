@@ -69,8 +69,8 @@ class VideoSingleton {
                     video.crop()
                 }
                 if (video.duracao > ApplicationConfig.getLimitForBaseVideo() + 1) {
-                    List<Video> abc = splitVideo(video)
-                    videos.addAll(abc)
+                    List<Video> splitedVideos = splitVideo(video)
+                    videos.addAll(splitedVideos)
                 }
                 videos.add(video)
             }
