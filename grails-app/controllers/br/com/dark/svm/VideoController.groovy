@@ -33,7 +33,7 @@ class VideoController implements ControllerExceptionHandler {
     }
 
     def makeShorts() {
-        Map retorno = videoService.makeShorts(params.long('id'))
+        Map retorno = videoService.makeShorts(params.get('id'))
         respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
     }
 

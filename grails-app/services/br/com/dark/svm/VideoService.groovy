@@ -152,10 +152,10 @@ class VideoService {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
-    Map makeShorts(Long id) {
+    Map makeShorts(String id) {
         Map retorno = [success: true]
 
-        Historia historia = historiaService.get(id)
+        Historia historia = historiaService.get(UUID.fromString(id))
 
         if (!historia) {
             throw new NotFoundException("Historia com ID ${id} não encontrada.")

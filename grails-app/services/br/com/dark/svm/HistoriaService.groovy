@@ -68,7 +68,7 @@ class HistoriaService {
         return historias.get(0)
     }
 
-    Historia get(Long id) {
+    Historia get(UUID id) {
         return Historia.get(id)
     }
 
