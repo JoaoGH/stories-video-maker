@@ -1,6 +1,7 @@
 package br.com.dark.svm
 
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Historia {
 
@@ -32,6 +33,17 @@ class Historia {
     @Override
     String toString() {
         return "Historia: [id: ${id}, titulo: ${titulo}]"
+    }
+
+    String getPath() {
+        String dataFormatada = dataCadastro.format(DateTimeFormatter.ISO_DATE_TIME)
+
+        StringBuilder path = new StringBuilder()
+        path << ApplicationConfig.getVideoBasePath() + "/"
+        path << origem.toLowerCase() + "/"
+        path << dataFormatada + "_" + id.toString()
+
+        return path.toString()
     }
 
 }

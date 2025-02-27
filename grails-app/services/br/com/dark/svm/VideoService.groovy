@@ -44,7 +44,7 @@ class VideoService {
                         success: false,
                         message: "Erro ao criar video para ${historia.toString()}."
                 ]
-                DirectoryHelper.deletarHistoria(ApplicationConfig.getVideoBasePath() + "/historia_${historia.id}")
+                DirectoryHelper.deletarHistoria(historia.getPath())
             }
         }
 
@@ -53,7 +53,7 @@ class VideoService {
 
     Map createVideo(Historia historia, BackgroundVideoEnum backgroundVideo, String sessionId, Boolean makeShorts) {
         Map retorno = [success: true]
-        String path = ApplicationConfig.getVideoBasePath() + "/${historia.origem.toLowerCase()}/historia_${historia.id}"
+        String path = historia.getPath()
 
         if (DirectoryHelper.folderExists(path)) {
             throw new Exception("Pasta '$path' já criada, logo a produção da ${historia.toString()} já foi inicializada.")
@@ -163,7 +163,7 @@ class VideoService {
 
         log.info("Identificar arquivos necessários para criar os shorts.")
 
-        String path = ApplicationConfig.getVideoBasePath() + "/${historia.origem.toLowerCase()}/historia_${historia.id}"
+        String path = historia.getPath()
         Video video = new Video(path + "/video.mp4")
         Audio titulo = new Audio(path + "/titulo.mp3")
         Audio conteudo = new Audio(path + "/conteudo.mp3")
