@@ -11,7 +11,7 @@ class JsonMarshaller {
     public static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
     public static final List CUSTOM_TYPES = [
-            LocalDate, LocalDateTime, LocalTime
+            LocalDate, LocalDateTime, LocalTime, UUID
     ]
 
     static toFinalValue(value) {
@@ -24,6 +24,10 @@ class JsonMarshaller {
 
     static String fromLocalDateTime(LocalDateTime value) {
         return value ? value.format(LOCAL_DATE_TIME_FORMATTER) : ""
+    }
+
+    static String fromUUID(UUID value) {
+        return value ? value.toString() : ""
     }
 
 }

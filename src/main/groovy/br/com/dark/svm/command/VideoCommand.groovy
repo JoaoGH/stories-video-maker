@@ -6,7 +6,7 @@ import grails.validation.Validateable
 
 class VideoCommand implements Validateable {
 
-    Long id
+    UUID id
     String sessionId
     String origem
     Boolean shorts

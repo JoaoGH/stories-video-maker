@@ -2,22 +2,22 @@ package br.com.dark.svm.enums
 
 enum BackgroundVideoEnum {
 
-    MINECRAFT("M", "base_videos/minecraft.mp4")
+    MINECRAFT("M", "minecraft")
 
     private String value
-    private String videoName
+    private String folder
 
     String getValue() {
         return value
     }
 
-    String getVideoName() {
-        return videoName
+    String getFolder() {
+        return folder
     }
 
-    BackgroundVideoEnum(String value, String videoName) {
+    BackgroundVideoEnum(String value, String folder) {
         this.value = value
-        this.videoName = videoName
+        this.folder = folder
     }
 
     static BackgroundVideoEnum value(String value) {

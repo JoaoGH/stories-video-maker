@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 class VideoController implements ControllerExceptionHandler {
 
     VideoService videoService
+    ScenarioService scenarioService
 
     static responseFormats = ['json']
 
@@ -27,12 +28,12 @@ class VideoController implements ControllerExceptionHandler {
     }
 
     def prepareScenario() {
-        Map retorno = videoService.prepareScenario()
+        Map retorno = scenarioService.prepareScenario()
         respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
     }
 
     def makeShorts() {
-        Map retorno = videoService.makeShorts(params.long('id'))
+        Map retorno = videoService.makeShorts(params.get('id'))
         respond(JsonHelper.toJSONObject(retorno), status: HttpStatus.OK)
     }
 

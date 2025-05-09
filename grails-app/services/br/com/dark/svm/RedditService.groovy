@@ -33,7 +33,9 @@ class RedditService implements ServletAttributes {
 
         for (JSONObject it : response.data.children) {
             Historia h = historiaService.save(it.data as Map, HistoriaOrigemEnum.AM_I_THE_ASSHOLE)
-            retorno.data << h
+            if (h) {
+                retorno.data << h
+            }
         }
 
         return retorno

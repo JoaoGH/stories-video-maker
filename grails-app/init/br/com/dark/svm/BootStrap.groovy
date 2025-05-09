@@ -5,8 +5,11 @@ import grails.converters.JSON
 
 class BootStrap {
 
+    ScenarioService scenarioService
+
     def init = { servletContext ->
         configureMashallers()
+        scenarioService.prepareScenario()
     }
     def destroy = {
     }

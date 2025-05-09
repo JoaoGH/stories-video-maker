@@ -27,16 +27,25 @@ class HistoriaService {
 
     Historia save(Map data, HistoriaOrigemEnum origem) {
         Historia record = new Historia()
+        record.setAutor(data.get('author').toString().toLowerCase())
         record.setTitulo(TextHelper.removerEmoji(data.title.toString()))
         record.setConteudo(TextHelper.removerEmoji(data.selftext.toString()))
         record.setOrigem(origem.getValue())
         record.setIdioma(new Locale("pt", "BR"))
         record.setStatus(HistoriaStatusEnum.OBTIDA.getValue())
-        record.setDataHoraBusca(LocalDateTime.now())
+        record.setDataCadastro(LocalDateTime.now())
+
+        if (!isUnique(record)) {
+            return null
+        }
 
         record.save(flush: true, failOnError: true)
 
         return record
+    }
+
+    boolean isUnique(Historia bean) {
+        return Historia.countByAutorAndOrigem(bean.autor, bean.origem) == 0
     }
 
     Historia update(Map parameters, Historia historia) {
@@ -59,7 +68,7 @@ class HistoriaService {
         return historias.get(0)
     }
 
-    Historia get(Long id) {
+    Historia get(UUID id) {
         return Historia.get(id)
     }
 
